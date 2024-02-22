@@ -15,4 +15,4 @@ dependencies:
 
 build:
 	v shield.v
-	echo Successfull Built ${CURRENT_DIR}
+	@echo Successfull Built ${CURRENT_DIR}
