@@ -1,7 +1,12 @@
 import os
-import src 
+import time
+
+import src
+import src.config 
 
 fn main() 
 {
-	src.monitor("eth0", 0, 0, false)
+	mut shield := src.monitor("eth0", 0, 0, false)
+	shield.set_theme("builtin")
+	time.sleep(10*time.second)
 }

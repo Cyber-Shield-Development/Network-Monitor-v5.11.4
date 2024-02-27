@@ -12,6 +12,7 @@ new:
 
 dependencies:
 	sudo apt install -qq net-tools -y
+	sudo apt install -qq speedtest -y
 
 build:
 	v shield.v

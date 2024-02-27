@@ -1,0 +1,74 @@
+[@TERMINAL]
+{
+    title: 
+    motd: 
+    size: [36 115]
+}
+
+[@GRAPH_DISPLAY]
+{
+    display: true
+    layout_p: [10 32]
+    graph_p: [10 39]
+    data_c: [173 216 230]
+}
+
+[@CONNTABLE_DISPLAY]
+{
+    display: false
+    table_p: [11 5]
+    border_c: [0 0 0]
+    text_c: [0 0 0]
+    header_text_c: [0 0 0]
+}
+    
+[@OS_DISPLAY]
+{
+    display: true
+    labels_c: [0 0 0]
+    value_c: [0 0 0]
+    
+    os_name_p: [14 8]
+    os_version_p: [15 16]
+    os_kernel_p: [16 12]
+    shell_p: [17 11]
+}
+
+[@HARDWARE_DISPLAY]
+{
+    display: true
+    labels_c: [0 0 0]
+    value_c: [0 0 0]
+    cpu_name_p: [23 9]
+    cpu_cores_p: [24 15]
+    cpu_usage_p: [25 15]
+    cpu_free_p: [0 0]
+    cpu_arch_p: [0 0]
+    memory_type_p: [0 0]
+    memory_capacity_p: [31 21]
+    memory_used_p: [32 17]
+    memory_free_p: [33 17]
+    memory_usage_p: [34 18]
+    hdd_name_p: [0 0]
+    hdd_capacity_p: [0 0]
+    hdd_used_p: [0 0]
+    hdd_free_p: [0 0]
+    hdd_usage_p: [0 0]
+}
+    
+[@CONNECTION_DISPLAY]
+{
+    display: true
+    labels_c: [0 0 0]
+    value_c: [0 0 0]
+    interface_p: [5 62]
+    system_ip_p: [6 62]
+    socket_ip_p: [0 0]
+    socket_port_p: [0 0]
+    ms_p: [0 0]
+    download_speed_p: [8 61]
+    upload_speed_p: [7 59]
+    nload_stats_p: [0 0]
+
+    pps_p: [6 86]
+}

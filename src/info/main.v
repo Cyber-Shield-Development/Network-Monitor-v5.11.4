@@ -1,4 +1,4 @@
-module utils 
+module info 
 
 pub fn remove_empty_elemets(arr []string) []string
 {
