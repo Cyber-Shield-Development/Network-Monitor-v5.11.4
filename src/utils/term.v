@@ -49,7 +49,7 @@ pub const (
 	bg_lightcyan	= "\x1b[106m"
 	bg_white 		= "\x1b[107m"
 
-	color 			= {
+	colors 			= {
 		"{DEFAULT}": 			c_default,
 		"{BLACK}": 				c_black,
 		"{RED}": 				c_red,
@@ -91,14 +91,45 @@ pub const (
 
 )
 
+pub fn replace_colors(data string) string
+{
+	mut new := data
+	for color, val in colors
+	{
+		if data.contains(color)
+		{
+			new = new.replace(color, val)
+		}
+	}
+
+	return new
+}
+
+pub fn list_text(mut c net.TcpConn, p []string, t string) {
+	mut row := p[0].int()
+	for line in t.split("\n") {
+		c.write_string("\x1b[${row};${p[1]}f${line}") or { 0 }
+		time.sleep(10*time.millisecond)
+		row++
+	}
+}
+
 pub fn set_title(mut client net.TcpConn, data string) 
 {
 	client.write_string("\033]0;${data}\007") or { 0 }
 }
 
-pub fn place_text(mut client net.TcpConn, row int, col int, data string)
+pub fn set_term_size(mut c net.TcpConn, row int, col int)
 {
+	c.write_string("\033[?25l") or { 0 }
+	c.write_string("\033[8;${row};${col}t") or { 0 }
+	time.sleep(80*time.millisecond)
+}
 
+pub fn place_text(mut client net.TcpConn, pos []string, data string)
+{
+	client.write_string("\033[${pos[0]};${pos[1]}f${data}") or { 0 }
+	time.sleep(80*time.millisecond)
 }
 
 pub fn place_animated_text(mut client net.TcpConn, row int, col int, data string, delay int)

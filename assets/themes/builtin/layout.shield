@@ -1,37 +1,40 @@
-███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
-██        [ Operating System ]          ║  ╔═╗╦ ╦╔╗ ╔═╗╦═╗     CS © 2024   ║          [ Connection Information ]         ██
-██                                      ║  ║  ╚╦╝╠╩╗║╣ ╠╦╝╗╦ ╦╦╔═╗╦  ╔╦╗   ║                                             ██
-██  OS: N/A                             ╚╗ ╚═╝ ╩ ╚═╝╚═╝╩╚╗╗╠═╣║║╣ ║   ║║  ╔╝ Interface: N/A                              ██
-██  OS Version: N/A                ╔═════╩╗ Algorithm   ╚═╝╩ ╩╩╚═╝╩═╝═╩╝ ╔╝  System IP: N/A                              ██
-██  Kernal: N/A                    ║      ╚═════════╗   ╦  ╦   ╔═════════╣ ms: N/A                                       ██
-██  Shell: N/A                     ║                ╚═══╚╗╔╝═══╝         ║ PPS: N/A         | PPS Under Attack: N/A      ██
-██═════════════════════════════════╣                     ╚╝              ╚═══════════════════════════════════════════════██
-██    [ Hardware Information ]     ║                                                                                     ██
-██                                 ║                                                                                     ██
-██ CPU: N/A                        ║                                                                                     ██
-██ CPU Cores: N/A                  ║                                                                                     ██
-██ CPU Usage: N/A                  ║                                                                                     ██
-██ Memory Usage: N/A               ║                                                                                     ██
-██ Memory Free: N/A                ║                                                                                     ██
-██ HDD Usage: N/A                  ║                                                                                     ██
-██ HDD Free: N/A                   ║                                                                                     ██
-██═════════════════════════════════╣                                                                                     ██
-██      [ nload Information ]      ║                                                                                     ██
-██                                 ║                                                                                     ██
-██ Curr: N/A                       ║                                                                                     ██
-██ Avg: N/A                        ║                                                                                     ██
-██ Min: N/A                        ║                                                                                     ██
-██ Max: N/A                        ║                                                                                     ██
-██ Ttl: N/A                        ║                                                                                     ██
-██═════════════════════════════════╣                                                                                     ██
-██ Upload/Download: N/A            ║                                                                                     ██
-██                                 ║                                                                                     ██
-██                                 ║                                                                                     ██
-██═════════════════════════════════╩═════╗                                                                               ██
-██ [ MOTD ]: This version of CyberShield ║                                                                               ██
-██ is private, It is not for sale! Join  ║                                                                               ██
-██ the discord for more.                 ║                                                                               ██
-██                                       ║                                                                               ██
-██                                       ║                                                                               ██
-██       [ discord.gg/CyberShield ]      ║                                                                               ██
-███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+{CYAN}███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████{DEFAULT}
+{CYAN}██{DEFAULT}        {CYAN}[{DEFAULT} Operating System {CYAN}]{DEFAULT}          {CYAN}║{DEFAULT}  ╔═╗╦ ╦╔╗ ╔═╗╦═╗     CS © 2024   {CYAN}║{DEFAULT}            {CYAN}[{DEFAULT} Attack Information {CYAN}]{DEFAULT}           {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT}                                      {CYAN}║{DEFAULT}  ║  ╚╦╝╠╩╗║╣ ╠╦╝╗╦ ╦╦╔═╗╦  ╔╦╗   {CYAN}║{DEFAULT}                                             {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} OS:                                  {CYAN}╚╗{DEFAULT} ╚═╝ ╩ ╚═╝╚═╝╩╚╗╗╠═╣║║╣ ║   ║║  {CYAN}╔╝{DEFAULT} Interface:                                  {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} OS Version:                     {CYAN}╔═════╩╗{DEFAULT} Algorithm   ╚═╝╩ ╩╩╚═╝╩═╝═╩╝ {CYAN}╔╝{DEFAULT}  System IP:                                  {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Kernal:                         {CYAN}║{DEFAULT}      {CYAN}╚═════════╗   {DEFAULT}╦  ╦{CYAN}   ╔═════════╣{DEFAULT} ms:              | Connections Count:         {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Shell:                          {CYAN}║{DEFAULT}                {CYAN}╚═══{DEFAULT}╚╗╔╝{CYAN}═══╝{DEFAULT}         {CYAN}║{DEFAULT} PPS:             | PPS & Con Limit:           {CYAN}██{DEFAULT}
+{CYAN}██═════════════════════════════════╣{DEFAULT}                     ╚╝              {CYAN}╚═══════════════════════════════════════════════██{DEFAULT}
+{CYAN}██{DEFAULT}    {CYAN}[{DEFAULT} Hardware Information {CYAN}]{DEFAULT}     {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT}                                 {CYAN}║{DEFAULT}                                     [ Packets Per Second ]                          {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} CPU:                            {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} CPU Cores:                      {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} CPU Usage:                      {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Memory Usage:                   {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Memory Free:                    {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} HDD Usage:                      {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} HDD Free:                       {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██═════════════════════════════════╣{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT}      {CYAN}[{DEFAULT} nload Information {CYAN}]{DEFAULT}      {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT}                                 {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Curr:                           {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Avg:                            {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Min:                            {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Max:                            {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Ttl:                            {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██═════════════════════════════════╣{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT}       {CYAN}[{DEFAULT} Connection Info {CYAN}]{DEFAULT}       {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT}                                 {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Status:                         {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Upload:                         {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Download:                       {CYAN}║{DEFAULT}                                                                                     {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Socket Port:                    {CYAN}╚═════╗{DEFAULT}                                                                               {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} Connect before attacking or you'll    {CYAN}║{DEFAULT}                                                                               {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} get blocked during an attack          {CYAN}║{DEFAULT}                                                                               {CYAN}██{DEFAULT}
+{CYAN}██═══════════════════════════════════════╣{DEFAULT}                                                                               {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} {CYAN}[{DEFAULT} MOTD {CYAN}]{DEFAULT}: This version of CyberShield {CYAN}║{DEFAULT}                                                                               {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} is private, It is not for sale! Join  {CYAN}║{DEFAULT}                                                                               {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT} the discord for more.                 {CYAN}║{DEFAULT}                                                                               {CYAN}██{DEFAULT}
+{CYAN}██{DEFAULT}       {CYAN}[{DEFAULT} discord.gg/CyberShield {CYAN}]{DEFAULT}      {CYAN}║{DEFAULT}                                                                               {CYAN}██{DEFAULT}
+{CYAN}███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████{DEFAULT}

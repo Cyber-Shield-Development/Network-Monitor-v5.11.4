@@ -1,103 +1,81 @@
-module src 
+module src
 
-import os
-import net
 import time
+import src.utils
 
-import src.info
-import src.config
-
-pub struct Client
+/* 
+*	- Display information to client via Socket
+*/
+pub fn start_displaying(mut c CyberShield, mut client Client)
 {
-	pub mut:
-		socket		net.TcpConn
-}
+	mut graph := utils.graph_init__(c.theme.theme, 28, 71)
+	println("[ + ] New socket connected")
 
-pub struct CyberShield
-{
-	pub mut:
-		interfacee				string
-		
-		ips						[]info.Netstat
-		pps						int
+	/* Set Terminal Title & Size */
+	utils.set_term_size(mut client.socket, 40, 123)
+	utils.set_title(mut client.socket, c.theme.term.title)
 
-		/* Output Options */
-		ui_mode					bool // Enable or Disable UI Mode for more proformance
-		theme					config.UI
-		cnc_port 				int
-		cnc_listener			net.TcpListener
-		clients					Client
-		web_port				int
+	/* Output Layout */
+	client.socket.write_string(utils.replace_colors(c.theme.layout)) or { 0 }
+	utils.list_text(mut client.socket, c.theme.graph.layout_p, c.theme.graph_layout) // Graph Layout
 
-		/* Connection Gathering Information */
-		established_cons 		int
-		close_wait_cons			int
-		time_wait_cons			int
-}
+	/* Add Information Display */
+	
+	/* OS Information */
+	utils.place_text(mut client.socket, c.theme.os.os_name_p, c.os_info.name)
+	utils.place_text(mut client.socket, c.theme.os.os_version_p, c.os_info.version)
+	utils.place_text(mut client.socket, c.theme.os.os_kernel_p, c.os_info.kernel)
+	utils.place_text(mut client.socket, c.theme.os.shell_p, c.os_info.shell)
+	
 
-pub fn monitor(iface string, cnc_p int, web_p int, ui bool) CyberShield 
-{
-	mut c := CyberShield{ interfacee: iface, cnc_port: cnc_p, web_port: web_p, ui_mode: ui }
-	//go start_monitoring(mut &c)
+	/* Connection Information */
+	utils.place_text(mut client.socket, c.theme.connection.download_speed_p, c.conn_info.download) // Download Speed
+	utils.place_text(mut client.socket, c.theme.connection.upload_speed_p, c.conn_info.upload) // Upload Speed
+	utils.place_text(mut client.socket, c.theme.connection.ms_p, c.conn_info.ms) // Upload Speed
+	utils.place_text(mut client.socket, c.theme.connection.interface_p, c.interfacee) // Interface 
+	utils.place_text(mut client.socket, c.theme.connection.system_ip_p, c.conn_info.system_ip) // IP Address 
+	utils.place_text(mut client.socket, c.theme.connection.pps_limit_p, "${c.max_pps}") // PPS To Filter 
 
-	/* UI Mode */
-	if c.ui_mode {
-		c.cnc_listener = net.listen_tcp(.ip6, ":444") or {
-			println("[ X ] Error, Unable to start CyberShield listener....!")
-			return c
-		}
-
-		// Start system/os information listener/grabber
-	}
-
-	/* Start protection */
-	go start_monitoring(mut &c)
-
-	return c
-}
-
-pub fn (mut c CyberShield) set_theme(name string) 
-{
-	c.theme = config.new_theme(name)
-}
-
-pub fn listener(mut c CyberShield)
-{
+	
 	for {
-
-		mut client := c.cnc_listener.accept() or { continue }
-		client.set_read_timeout(time.infinite)
-	}
-}
-
-pub fn start_monitoring(mut c CyberShield)
-{
-	/* Start the UI if enabled */
-	for 
-	{
-		/* Grab information to parse and detect */
-		old_pps := info.fetch_pps_info(c.interfacee)
-		time.sleep(1*time.second)
-		new_pps := info.fetch_pps_info(c.interfacee)
-
-		c.pps = (old_pps.tx - new_pps.tx) - (old_pps.rx - new_pps.rx)
-
-		/* Detection */
-		mut ips_data := info.grab_ips().split("\n")
-		for line in ips_data
-		{
-			ip_info := info.remove_empty_elemets(line.split(" "))
-			if ip_info.len < 4 || !line.contains(":") { continue }
-			c.ips << info.new(ip_info)
-
-			// protection goes in here
+		client.socket.write_string(" ") or { 
+			c.rm_socket(mut client.socket)
+			return
 		}
-	}
-}
 
-pub fn (mut c CyberShield) start_displaying(mut client Client)
-{
-	print("${c.theme.layout}")
-	// for {
-	// }
+		
+		utils.place_text(mut client.socket, c.theme.connection.connection_count, c.ips.len.str()) // IP Address 
+
+		/* Display Attack & nload Information */
+		utils.place_text(mut client.socket, c.theme.connection.pps_p, "\x1b[32m${c.pps}\x1b[39m") // PPS
+		utils.place_text(mut client.socket, c.theme.connection.nload_curr, "\x1b[32m${c.conn_info.curr}\x1b[39m GBit/s") // nload Curr
+		utils.place_text(mut client.socket, c.theme.connection.nload_avg, "\x1b[32m${c.conn_info.avg}\x1b[39m GBit/s") // nload Avg
+		utils.place_text(mut client.socket, c.theme.connection.nload_min, "\x1b[32m${c.conn_info.min}\x1b[39m GBit/s") // nload Min
+		utils.place_text(mut client.socket, c.theme.connection.nload_max, "\x1b[32m${c.conn_info.max}\x1b[39m GBit/s") // nload Max
+		utils.place_text(mut client.socket, c.theme.connection.nload_ttl, "\x1b[32m${c.conn_info.ttl}\x1b[39m GBit/s") // nload Ttl
+
+		
+		if c.theme.graph.display {
+			graph.append_to_graph(c.pps) or { continue }
+			if c.under_attack { utils.list_text(mut client.socket, c.theme.graph.graph_p, utils.replace_colors(graph.render_graph().replace("#", "{RED}#{DEFAULT}"))) } 
+			else { utils.list_text(mut client.socket, c.theme.graph.graph_p, utils.replace_colors(graph.render_graph().replace("#", "{GREEN}#{DEFAULT}"))) }
+		}
+		
+		if c.under_attack {
+			utils.place_text(mut client.socket, c.theme.connection.online_status, "\x1b[31mUnder Attack\x1b[39m") // Connection Status
+		} else {
+			utils.place_text(mut client.socket, c.theme.connection.online_status, "\x1b[32mOnline\x1b[39m") // Connection Status
+		}
+
+		time.sleep(1*time.second)
+		/* Text Reset */
+		utils.place_text(mut client.socket, c.theme.connection.online_status, "              ") // Online Status
+		utils.place_text(mut client.socket, c.theme.connection.connection_count, "        ") // Connection Count
+		utils.place_text(mut client.socket, c.theme.connection.pps_p, "            ") // PPS
+		utils.place_text(mut client.socket, c.theme.connection.nload_curr, "              ") // nload Curr
+		utils.place_text(mut client.socket, c.theme.connection.nload_avg, "              ") // nload Avg
+		utils.place_text(mut client.socket, c.theme.connection.nload_min, "              ") // nload Min
+		utils.place_text(mut client.socket, c.theme.connection.nload_max, "              ") // nload Max
+		utils.place_text(mut client.socket, c.theme.connection.nload_ttl, "              ") // nload Ttl
+	}
 }

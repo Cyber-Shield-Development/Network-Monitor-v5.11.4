@@ -20,14 +20,15 @@ pub enum State_T
 
 pub struct Netstat 
 {
-	protocol		string
-	recv_bytes		int
-	sent_bytes		int
-	internal_ip 	string
-	internal_port	int
-	external_ip		string
-	external_port	int
-	state			State_T
+	pub mut:
+		protocol		string
+		recv_bytes		int
+		sent_bytes		int
+		internal_ip 	string
+		internal_port	int
+		external_ip		string
+		external_port	int
+		state			State_T
 }
 
 pub fn new(arr []string) Netstat
@@ -44,9 +45,20 @@ pub fn new(arr []string) Netstat
 	}
 }
 
-pub fn grab_ips() string
+pub fn grab_ips() []Netstat
 {
-	return os.execute("netstat -tn").output
+	ips_data := os.execute("netstat -tn").output.split("\n")
+	mut conns := []Netstat{}
+	
+	for line in ips_data
+	{
+		line_info := line.split(" ")
+		ip_info := info.remove_empty_elemets(line_info)
+		if ip_info.len < 4 || !line.contains(":") { continue }
+		conns << new(ip_info)
+	}
+
+	return conns
 }
 
 pub fn (mut n Netstat) is_alive() bool

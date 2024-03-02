@@ -1,0 +1,29 @@
+[@SETTINGS]
+{
+    interface: ens3
+    pps_to_filter: 10000
+    max_connections: 10
+    max_con_per_port: 5
+    auto_reset_rules: true
+    auto_add_rules: false
+}
+
+[@PERSONAL_RULES]
+{
+    iptables -I INPUT -p tcp --dport 444 -j ACCEPT
+    iptables -I OUTPUT -p tcp --dport 444 -j ACCEPT
+}
+
+[@PROTECTED_IPS]
+{
+    73.88.154.63
+}
+
+[@PROTECTED_PORTS]
+{
+    444
+    255
+    666
+    1024
+    1337
+}

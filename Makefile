@@ -12,8 +12,8 @@ new:
 
 dependencies:
 	sudo apt install -qq net-tools -y
-	sudo apt install -qq speedtest -y
+	sudo apt install -qq speedtest-cli -y
 
 build:
-	v shield.v
+	v cs.v
 	@echo Successfull Built ${CURRENT_DIR}

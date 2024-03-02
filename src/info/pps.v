@@ -1,9 +1,6 @@
 module info
 
 import os
-import time
-
-const packet_path = "/sys/class/net/{interface}/statistics/{mode}_packets"
 
 pub struct PPS 
 {
@@ -17,10 +14,11 @@ pub struct PPS
 
 pub fn fetch_pps_info(iface string) PPS
 {
-	rx_f := packet_path.replace("{interface}", iface).replace("{mode}", "rx")
-	tx_f := packet_path.replace("{interface}", iface).replace("{mode}", "tx")
-	return PPS{
-		rx: (os.read_file(rx_f) or { "" }).int(),
-		tx: (os.read_file(tx_f) or { "" }).int()
+	mut rx := "cat /sys/class/net/$iface/statistics/rx_packets"
+	mut tx := "cat /sys/class/net/$iface/statistics/tx_packets"
+	mut t := PPS{
+		rx: (os.execute(rx).output).int(),
+		tx: (os.execute(tx).output).int()
 	}
+	return t
 }

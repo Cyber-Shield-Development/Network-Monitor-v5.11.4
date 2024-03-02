@@ -1,0 +1,104 @@
+import os
+import time
+
+import src
+
+const help = "Name              Description
+_____________________________________________________
+-i                Set an Interface
+-mp               Set a Max PPS before attack mode
+-s                Set a socket port
+-w                Set an API port
+-tui              Set a TUI Theme Pack
+     <theme_name> Name of the theme
+-ssh              View or Edit SSH Ports
+     <add> <port> Add another Port
+     <rm> <port>  Remove an SSH Port
+	 <view>       View all active SSH Ports"
+
+fn main() 
+{
+
+	args := os.args.clone()
+	
+	// ./script -i <INTERFACE>
+	if args.len < 3 {
+		println("[ X ] Error, Invalid arguments provided\r\nUse --h|--help flag for a list of help commands")
+		exit(0)
+	} else if '--h' in args || '--help' in args {
+		println(help)
+		exit(0)
+	}  else if '-ssh' in args { 
+		// script -ssh view
+		if args[2] == "view"
+		{
+
+		} else if args[2] == "add" {
+			port := args[2].int()
+			if port == 0 { println("[ X ] Invalid argument, Use '--h' for a list of help commands") exit(0) }
+
+			// add port
+		} else if args[2] == "rm" {
+			port := args[2].int()
+			if port == 0 { println("[ X ] Invalid argument, Use '--h' for a list of help commands") exit(0) }
+
+			// remove port
+		} else {
+			if port == 0 { println("[ X ] Invalid argument, Use '--h' for a list of help commands") exit(0) }
+		}
+	}
+
+	/* Ensure the following arguments are provided */
+	for element in ['-i', '-mp']
+	{
+		if element !in args { 
+			println("[ X ] Error, Invalid arguments provided\r\nUse --h|--help flag for a list of help commands")
+			exit(0)
+		}
+	}
+	
+	mut cs := src.CyberShield{}
+	for i, arg in args 
+	{
+		match arg 
+		{
+			"-i" {
+				cs.interfacee = args[i+1]
+			}
+			"-mp" {
+				cs.max_pps = args[i+1].int()
+			}
+			"-s" {
+				cs.cnc_port = args[i+1].int()
+			}
+			"-tui" {
+				cs.ui_mode = true
+				cs.set_theme(args[i+1])
+			}
+			"-reset" {
+				cs.reset_tables = true
+			} else {}
+		}
+	}
+	
+	go src.monitor(mut &cs)
+
+	local_cmd_handler(mut &cs)
+}
+
+fn local_cmd_handler(mut c CyberShield) 
+{
+	for {
+		data := os.input("__________________________\r\n ~ $ ")
+
+		args := data.split(" ")
+		cmd := args[0]
+
+		match cmd {
+			"theme" {
+				if data != 2 { continue }
+				c.set_theme(cmd[1])
+			} else {} 
+		}
+	}
+}
