@@ -106,6 +106,8 @@ pub fn replace_colors(data string) string
 }
 
 pub fn list_text(mut c net.TcpConn, p []string, t string) {
+	if p == [] || p == ["0","0"] { return }
+
 	mut row := p[0].int()
 	for line in t.split("\n") {
 		c.write_string("\x1b[${row};${p[1]}f${line}") or { 0 }
@@ -128,6 +130,7 @@ pub fn set_term_size(mut c net.TcpConn, row int, col int)
 
 pub fn place_text(mut client net.TcpConn, pos []string, data string)
 {
+	if pos == [] || pos == ["0","0"] { return }
 	client.write_string("\033[${pos[0]};${pos[1]}f${data}") or { 0 }
 	time.sleep(80*time.millisecond)
 }

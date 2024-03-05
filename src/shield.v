@@ -1,6 +1,7 @@
 module src
 
 import os
+import time
 import src.utils
 
 /* 
@@ -28,12 +29,36 @@ pub fn (mut c CyberShield) filter()
 */
 pub fn (mut c CyberShield) drop_attack()
 {
-	for con in c.ips {
-		if con.internal_port in c.cfg_protected_port && c.count_port_used(con.internal_port) < c.max_con_per_port { continue }
-		if con.external_ip in c.cfg_protected_ip { continue }
-		c.abused_port << con.internal_port
-		println("${utils.c_red}[ + ]${utils.c_default} ${con.internal_port} being attacked, Dropping Connections on Port ${con.internal_port}....!")
-		os.execute("fuser -k ${con.internal_port}/tcp; service ssh restart > /dev/null")
+	for {
+
+		if !c.under_attack && c.drop_con_mode {
+			println("${utils.success_sym} Attack seems to be be finished...\r\n\t=> Drop system blocked and dropped ${c.blocked_ips.len} connections....\r\n\t=>Exiting the drop system.")
+			c.drop_con_mode = false
+			return 
+		}
+		for con in c.ips {
+			/* 
+			* 	Do not drop port unless there more than expected connection on the port (Request Spam)
+			*/ 
+			if con.internal_port in c.cfg_protected_port && c.count_port_used(con.internal_port) < c.max_con_per_port { continue }
+
+			/*
+			*	Skip, IP if its in the Protected IP list
+			*/
+			if con.external_ip in c.cfg_protected_ip { continue }
+
+			if con.internal_port in c.abused_port { continue }
+			
+			/* Add port to a list of abused ports */
+			c.abused_port << con.internal_port
+			
+			println("${utils.failed_sym} Port ${con.internal_port} being attacked....!")
+			os.execute("fuser -k ${con.internal_port}/tcp; service ssh restart > /dev/null")
+
+			println("${utils.success_sym} Connections on ${con.internal_port} Dropped...!")
+		}
+		println("[ + ] Sleeping for 3 seconds to determine if attack is still going....")
+		time.sleep(3*time.second)
 	}
 }
 

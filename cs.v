@@ -2,8 +2,10 @@ import os
 import time
 
 import src
+import src.utils
 
-const help = "Name              Description
+pub const (
+	help = "Name              Description
 _____________________________________________________
 -i                Set an Interface
 -mp               Set a Max PPS before attack mode
@@ -15,11 +17,15 @@ _____________________________________________________
      <add> <port> Add another Port
      <rm> <port>  Remove an SSH Port
 	 <view>       View all active SSH Ports"
+	 
+	invalid_argument = "[ X ] Error, Invalid arguments provided\r\nUse --h|--help flag for a list of help commands"
+)
 
 fn main() 
 {
 
 	args := os.args.clone()
+	mut port := 0
 	
 	// ./script -i <INTERFACE>
 	if args.len < 3 {
@@ -29,17 +35,18 @@ fn main()
 		println(help)
 		exit(0)
 	}  else if '-ssh' in args { 
+		if args.len < 2 { println(invalid_argument) exit(0) }
 		// script -ssh view
 		if args[2] == "view"
 		{
 
 		} else if args[2] == "add" {
-			port := args[2].int()
+			port = args[2].int()
 			if port == 0 { println("[ X ] Invalid argument, Use '--h' for a list of help commands") exit(0) }
 
 			// add port
 		} else if args[2] == "rm" {
-			port := args[2].int()
+			port = args[2].int()
 			if port == 0 { println("[ X ] Invalid argument, Use '--h' for a list of help commands") exit(0) }
 
 			// remove port
@@ -83,10 +90,10 @@ fn main()
 	
 	go src.monitor(mut &cs)
 
-	local_cmd_handler(mut &cs)
+	local_cmd_handler(mut cs)
 }
 
-fn local_cmd_handler(mut c CyberShield) 
+fn local_cmd_handler(mut c src.CyberShield) 
 {
 	for {
 		data := os.input("__________________________\r\n ~ $ ")
@@ -96,8 +103,11 @@ fn local_cmd_handler(mut c CyberShield)
 
 		match cmd {
 			"theme" {
-				if data != 2 { continue }
-				c.set_theme(cmd[1])
+				if data.int() != 2 { continue }
+				c.set_theme(args[1])
+			}
+			"clear", "cls", "c" {
+				println("${utils.clear}")
 			} else {} 
 		}
 	}

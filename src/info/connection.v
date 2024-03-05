@@ -70,7 +70,7 @@ pub fn (mut c Connection) get_connection_speed()
 */
 pub fn get_nload_info(mut c Connection) 
 {
-	os.execute("timeout 1 nload -m -u g > t.txt").output
+	os.execute("timeout 1 nload ${c.iface} -m -u g > t.txt").output
 	
 	lines := os.read_lines("t.txt") or { [] }
 	for line in lines 

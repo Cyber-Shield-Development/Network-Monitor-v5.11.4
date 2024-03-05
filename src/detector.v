@@ -15,7 +15,7 @@ pub fn (mut c CyberShield) start_monitoring()
 	for 
 	{
 		current_time := "${time.now()}".replace("-", "/").replace(" ", "-")
-		if c.ui_mode && !c.under_attack {
+		if c.ui_mode {
 			go info.get_nload_info(mut &c.conn_info)
 		}
 
@@ -30,20 +30,51 @@ pub fn (mut c CyberShield) start_monitoring()
 
 		/* 
 		* 	Detect Config Max Connections and Enable Filtering System
+		*
+		*	Enable filtering system once the max con OR max PPS has been reached
 		*/
 		if c.count_unique_cons() > c.max_connections || c.pps >= c.max_pps { 
 			go c.ip2logs(c.ips)
 			go c.filter()
-			go c.drop_attack()
 			c.under_attack = true
-		} else { 
+		}
+
+		/*
+		* Enable drop connection system once the max PPS has been reached
+		*/
+		if !c.drop_con_mode && c.pps >= c.max_pps {
+			go c.drop_attack()
+		}
+
+		/*
+		*	- Detecting for finished or dropped attack then disables all system
+		*	  and create a custom dump file.
+		*/
+		if (c.under_attack && !c.drop_con_mode) && c.pps < c.max_pps { 
 			c.under_attack = false 
+			c.drop_con_mode = false
 			if c.ip_logs.len > 0 && c.blocked_ips.len > 0  { 
 				c.create_log_file()
-				if c.reset_tables { os.execute("sudo iptables -F") }
+				if c.reset_tables { os.execute("sudo iptables -F; sudo iptables-save") }
+				if c.auto_add_rules { c.add_personal_rules() }
 			}
 		}
 	}
+}
+
+pub fn (mut c CyberShield) add_personal_rules() 
+{
+	all_current_tables := os.execute("sudo iptables -S").output.split("\n")
+	os.execute("sudo iptables -F; sudo iptables-save")
+
+	for rule in c.personal_rules {
+		if rule.len < 1 { continue }
+		if rule in all_current_tables { continue }
+
+		os.execute("${rule}")
+		time.sleep(60*time.millisecond)
+	}
+	os.execute("sudo iptables-save")
 }
 
 pub fn (mut c CyberShield) count_unique_cons() int 

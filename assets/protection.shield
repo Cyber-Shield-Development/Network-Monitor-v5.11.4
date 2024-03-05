@@ -5,7 +5,7 @@
     max_connections: 10
     max_con_per_port: 5
     auto_reset_rules: true
-    auto_add_rules: false
+    auto_add_rules: true
 }
 
 [@PERSONAL_RULES]

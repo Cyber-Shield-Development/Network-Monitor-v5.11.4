@@ -8,6 +8,7 @@ import src.utils
 */
 pub fn start_displaying(mut c CyberShield, mut client Client)
 {
+	client.socket.set_read_timeout(time.infinite)
 	mut graph := utils.graph_init__(c.theme.theme, 28, 71)
 	println("[ + ] New socket connected")
 
