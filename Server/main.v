@@ -26,7 +26,9 @@ pub struct Client
 	pub mut:
 		lid 		string
 		session_id 	string
+		client_ip   string
 		connected	bool
+		reader 		io.BufferedReader
 
 		user 		User
 		socket 		net.TcpConn
@@ -126,7 +128,7 @@ pub fn (mut license License) authenticate(mut socket net.TcpConn)
 	if !"${auth_info}".contains("\"}") {
 		auth_info = auth_info + "\"}"
 	}
-
+	
 	println(auth_info)
 	if !auth_info.trim_space().starts_with("{") || !auth_info.trim_space().ends_with("}") {
 		println("[ X ] Error, Invalid JSON authentication information provided....")
@@ -149,9 +151,10 @@ pub fn (mut license License) authenticate(mut socket net.TcpConn)
 		return
 	}
 
-	mut c_client 			:= Client{
+	mut c_client := Client{
 		user: find_user(license.users, lid),
 		socket: socket,
+		client_ip: client_ip
 	}
 	println("[ + ] New user connected.....\r\n\t=> IP: ${client_ip}\r\n\t=>License ID: ${lid}\r\n\t=> HWID: ${hwid}")
 
@@ -176,20 +179,27 @@ pub fn (mut license License) authenticate(mut socket net.TcpConn)
 	}
 
 	// Add IPLOCK/HWID Validation
-	license.handle(mut c_client)
+	license.handle(mut c_client, mut reader)
 }
 
-pub fn (mut license License) handle(mut client Client)
+pub fn (mut license License) handle(mut client Client, mut reader io.BufferedReader)
 {
-	mut reader := io.new_buffered_reader(reader: client.socket)
+	// mut reader := io.new_buffered_reader(reader: client.socket)
 	for 
 	{
 		data 				:= reader.read_line() or { "" }
-		mut client_ip 		:= client.socket.peer_ip() or { "" }
-		client_ip 			= client_ip.replace("[::ffff:", "").split("]:")[0]
-		json_data 			:= (json.raw_decode("${data}") or { json.Any{} }).as_map()
+		// Added too client Struct
+		// mut client_ip 		:= client.socket.peer_ip() or { "" }
+		// client_ip 			= client_ip.replace("[::ffff:", "").split("]:")[0]
 
-		println(data)
+		json_data 			:= (json.raw_decode(data) or { json.Any{} }).as_map()
+
+		// println("DATA: ${data}")
+		// println("====================================")
+		// println(json_data)
+		// println("====================================")
+		// println(client.client_ip)
+
 		if !data.trim_space().starts_with("{") || !data.trim_space().ends_with("}") {
 			println("[ X ] (HANDLER) Error, Invalid JSON authentication information provided....${data}")
 			client.socket.close() or { return }
@@ -204,14 +214,13 @@ pub fn (mut license License) handle(mut client Client)
 		cmd 		:= (json_data['cmd'] 			or { "" }).str()
 		lid 		:= (json_data['license_id'] 	or { "" }).str()
 		ping_data	:= (json_data['data'] 			or { "" }).str()
+		// if !client.user.validate_iplock(client.client_ip) || client.client_ip != "0.0.0.0" {
+		// 	println("[ X ] Error, Invalid connection mismatch. Possible attacker.....")
+		// 	client.socket.close() or { return }
+		// 	return
+		// }
 
-		if !client.user.validate_iplock(client_ip) || client_ip != "0.0.0.0" {
-			println("[ X ] Error, Invalid connection mismatch. Possible attacker.....")
-			client.socket.close() or { return }
-			return
-		}
-
-		match cmd 
+		match cmd
 		{
 			"PING" {
 				println("[ NEW PING ] ${lid} ${ping_data}")
@@ -260,6 +269,9 @@ pub fn (mut a API) auth() vweb.Result
 	ip 				:= a.ip()
 	mut acc 		:= User{}
 	mut new_client 	:= Client{}
+
+	println(lid)
+	println(hwid)
 
 	if lid == "" || hwid == "" {
 		return a.text("[ X ] Error, Invalid data provided....!")

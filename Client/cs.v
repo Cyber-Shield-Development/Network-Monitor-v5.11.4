@@ -6,23 +6,22 @@ import src.utils
 pub const (
 	help = "Name              Description
 _____________________________________________________
--i                Set an Interface
--mp               Set a Max PPS before attack mode
--s                Set a socket port
--w                Set an API port
--tui              Set a TUI Theme Pack
-     <theme_name> Name of the theme
--ssh              View or Edit SSH Ports
-     <add> <port> Add another Port
-     <rm> <port>  Remove an SSH Port
-     <view>       View all active SSH Ports"
-	 
+-i               Set an Interface
+-mp              Set a Max PPS before attack mode
+-s               Set a socket port
+-w               Set an API port
+-tui             Set a TUI Theme Pack
+    <theme_name> Name of the theme
+-ssh             View or Edit SSH Ports
+    <add> <port> Add another Port
+    <rm> <port>  Remove an SSH Port
+    <view>       View all active SSH Ports"
+	
 	invalid_argument = "[ X ] Error, Invalid arguments provided\r\nUse --h|--help flag for a list of help commands"
 )
 
 fn main() 
 {
-
 	args := os.args.clone()
 	mut port := 0
 	
