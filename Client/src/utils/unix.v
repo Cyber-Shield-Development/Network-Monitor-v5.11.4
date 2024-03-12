@@ -4,19 +4,19 @@ import os
 import net.http
 import x.json2 as json
 
-pub const auth_api = "https://yomarket.info/auth"
+pub const auth_api 	    = "https://yomarket.info/auth"
 pub const ping_endpoint = "https://yomarket.info/ping"
 
-struct AuthResponse {
-	mut:
+pub struct AuthResponse {
+	pub mut:
 		session_id            string
-		notification_access   string
-		dump_access           string
-		filter_access         string
-		drop_access           string
+		notification_access   int
+		dump_access           int
+		filter_access         int
+		drop_access           int
 }
 
-fn (mut auth AuthResponse) load(fjson map[string]json.Any) {
+pub fn (mut auth AuthResponse) load(fjson map[string]json.Any) {
 	auth.session_id          = fjson['session_id']           or { "" }.str()
 	auth.notification_access = fjson['notification_access']  or { "" }.str().int()
 	auth.dump_access         = fjson['dump_access']          or { "" }.str().int()
@@ -24,33 +24,33 @@ fn (mut auth AuthResponse) load(fjson map[string]json.Any) {
 	auth.drop_access         = fjson['drop_access']          or { "" }.str().int()
 }
 
-pub fn validate(lid string) map[string]string
-{
-	device_hwid := get_hardware_id()
-	mut resp := http.get_text(create_get_parameters(
-			auth_api,
-			{
-				"license_id": "${lid}",
-				"hwid": "${device_hwid}"
-			}
-		)
-	)
+// pub fn validate(lid string) map[string]string
+// {
+// 	device_hwid := get_hardware_id()
+// 	mut resp := http.get_text(create_get_parameters(
+// 			auth_api,
+// 			{
+// 				"license_id": "${lid}",
+// 				"hwid": "${device_hwid}"
+// 			}
+// 		)
+// 	)
 	
-	if resp == "" || resp.contains("[ X ]") {
-		println("[ X ] Error, No access to CyberShield....!")
-		exit(0)
-	}
+// 	if resp == "" || resp.contains("[ X ]") {
+// 		println("[ X ] Error, No access to CyberShield....!")
+// 		exit(0)
+// 	}
 
-	if resp != "" {
-		resp = resp.split("//")[1].replace("'", "\"")
-	}
+// 	if resp != "" {
+// 		resp = resp.split("//")[1].replace("'", "\"")
+// 	}
 
-	return json2map(
-		(json.raw_decode("${resp}") or { json.Any{} }).as_map()
-	)
-}
+// 	return json2map(
+// 		(json.raw_decode("${resp}") or { json.Any{} }).as_map()
+// 	)
+// }
 
-fn authenticate(license_id string) !AuthResponse {
+pub fn authenticate(license_id string) !AuthResponse {
 	device_hwid  := get_hardware_id()
 	mut resp 	 := AuthResponse{}
     // mut response := http.get_text("http://127.0.0.1/auth?license_id=abP7wcJRluTlDGt5twPZpDODAFYCSxm4&hwid=8e02071b824244a88c32304645037ced")
@@ -65,7 +65,7 @@ fn authenticate(license_id string) !AuthResponse {
 		)
 	)
 
-	if resp == "" {
+	if response == "" {
 		println("[ X ] Error, CyberSheild Api....!")
 		exit(0)
 	}
