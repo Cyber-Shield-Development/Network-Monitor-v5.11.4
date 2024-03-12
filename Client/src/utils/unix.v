@@ -7,6 +7,23 @@ import x.json2 as json
 pub const auth_api = "https://yomarket.info/auth"
 pub const ping_endpoint = "https://yomarket.info/ping"
 
+struct AuthResponse {
+	mut:
+		session_id            string
+		notification_access   string
+		dump_access           string
+		filter_access         string
+		drop_access           string
+}
+
+fn (mut auth AuthResponse) load(fjson map[string]json.Any) {
+	auth.session_id          = fjson['session_id']           or { "" }.str()
+	auth.notification_access = fjson['notification_access']  or { "" }.str().int()
+	auth.dump_access         = fjson['dump_access']          or { "" }.str().int()
+	auth.filter_access       = fjson['filter_access']        or { "" }.str().int()
+	auth.drop_access         = fjson['drop_access']          or { "" }.str().int()
+}
+
 pub fn validate(lid string) map[string]string
 {
 	device_hwid := get_hardware_id()
@@ -31,6 +48,39 @@ pub fn validate(lid string) map[string]string
 	return json2map(
 		(json.raw_decode("${resp}") or { json.Any{} }).as_map()
 	)
+}
+
+fn authenticate(license_id string) !AuthResponse {
+	device_hwid  := get_hardware_id()
+	mut resp 	 := AuthResponse{}
+    // mut response := http.get_text("http://127.0.0.1/auth?license_id=abP7wcJRluTlDGt5twPZpDODAFYCSxm4&hwid=8e02071b824244a88c32304645037ced")
+	mut response := http.get_text(
+		create_get_parameters
+		(
+			auth_api,
+			{
+				"license_id": "${license_id}",
+				"hwid": "${device_hwid}"
+			}
+		)
+	)
+
+	if resp == "" {
+		println("[ X ] Error, CyberSheild Api....!")
+		exit(0)
+	}
+
+	if response.contains('[ + ] Successfully authorized!') {
+		response = response.replace('[ + ] Successfully authorized!//', '').replace("'", '"')
+		auth := json.raw_decode(response) or {
+			println("[ X ] Error, CyberSheild Api....!")
+			exit(0)
+		}
+		resp.load(auth.as_map())
+		return resp
+	}
+	println("[ X ] Error, No access to CyberShield....!")
+	exit(0)
 }
 
 /*

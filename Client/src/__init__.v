@@ -145,19 +145,46 @@ pub fn monitor(mut c CyberShield)
 pub fn (mut c CyberShield) start_cybershield(lid string) 
 {
 	c.settings = GlobalSettings{key: lid}
-	mut data := utils.validate(lid)
-	if data == {} {
-		println("[ X ] Error, No access to CyberShield....!")
+	// mut data := utils.validate(lid)
+	mut data := utils.authenticate(lid)
+	mut hwid := utils.get_hardware_id()
+	// if data == {} {
+	// 	println("[ X ] Error, No access to CyberShield....!")
+	// 	exit(0)
+	// }
+
+	// c.settings.notification_access 	= data['notification_access'].int()
+	// c.settings.dump_access 			= data['dump_acceess'].int()
+	// c.settings.filter_access 		= data['filter_access'].int()
+	// c.settings.drop_access 			= data['drop_access'].int()
+	c.settings.notification_access 	= data.notification_access
+	c.settings.dump_access 			= data.dump_acceess
+	c.settings.filter_access 		= data.filter_access
+	c.settings.drop_access 			= data.drop_access
+	c.settings.key 					= lid
+	c.key 							= lid
+	mut sid 			 			:= data.session_id
+
+	mut cybersheild_server_ip 	:= ""
+	mut cybersheild_server_port := 0
+
+	mut fd := net.dial_tcp("${cybersheild_server_ip}:${cybersheild_server_port}") or {
+		println("[ X ] Error, Unable to connect to the server....!")
 		exit(0)
 	}
 
-	c.settings.notification_access 	= data['notification_access'].int()
-	c.settings.dump_access 			= data['dump_acceess'].int()
-	c.settings.filter_access 		= data['filter_access'].int()
-	c.settings.drop_access 			= data['drop_access'].int()
-	c.settings.key 					= lid
-	c.key 							= lid
-	// mut sid 			 			:= data['session_id']
+	fd.write_string('{"cmd":"client_authentication", "license_id":"${lid}", "hwid": "${hwid}", "sid":"${sid}"}\n') or {
+		println("[ X ] Error, Unable to send the message....!")
+		exit(0)
+	}
+	
+	for {
+		fd.write_string('{"cmd":"PING", "license_id":"${lid}", "data":"TEST_DATA"}\n') or {
+			println("[ X ] Error, Unable to send the message....!")
+			exit(0)
+		}
+		time.sleep(5 * time.second)
+	}
 }
 
 /*

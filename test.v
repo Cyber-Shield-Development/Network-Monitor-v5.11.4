@@ -24,25 +24,17 @@ fn (mut auth AuthResponse) load(fjson map[string]json.Any) {
 }
 
 fn authenticate(license_id string, hwid string) !AuthResponse {
-	mut resp := AuthResponse{}
-    // mut response := http.get('http://localhost:80/auth?license_id=${license_id}&hwid=${hwid}') or {
-    mut response := http.get('http://localhost:80/auth?license_id=${license_id}&hwid=${hwid}') or {
-        return error('Failed to send the request: ${err}')
-    }
-    if response.status_code != 200 {
-        return error('Server returned an error: ${response.status_code}')
-    }
-	if response.body.str().contains('[ + ] Successfully authorized!') {
-		response.body = response.body.str().replace('[ + ] Successfully authorized!//', '').replace("'", '"')
-		auth := json.raw_decode(response.body.str()) or {
+	mut resp 	 := AuthResponse{}
+    mut response := http.get_text("http://127.0.0.1/auth?license_id=abP7wcJRluTlDGt5twPZpDODAFYCSxm4&hwid=8e02071b824244a88c32304645037ced")
+	if response.contains('[ + ] Successfully authorized!') {
+		response = response.replace('[ + ] Successfully authorized!//', '').replace("'", '"')
+		auth := json.raw_decode(response) or {
 			return error('Failed to parse the response: ${err}')
 		}
 		resp.load(auth.as_map())
-		resp.hwid = hwid
-		resp.license_id = license_id
 		return resp
 	}
-	return error('Failed to authenticate: ${response.body.str()}')
+	return error('Failed to authenticate: ${response}')
 }
 
 fn (mut auth AuthResponse) clientloop(server_ip string, server_port int) ! {
