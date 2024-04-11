@@ -22,7 +22,7 @@ pub fn (mut c CyberShield) start_detection()
 		c.network.netstat_cons = ns.grab_cons()
 
 		chk_stage_one 		:= c.config.protection.detect_stage_one(c.network.pps, c.retrieve_unique_cons().len)
-		chk_stage_two 		:= c.config.protection.detect_stage_two(c.network.pps, c.retrieve_unique_cons().len, c.current_dump.blocked_cons.len)
+		chk_stage_two 		:= c.config.protection.detect_stage_two(c.network.pps, c.network.netstat_cons.len, c.retrieve_unique_cons().len, c.current_dump.blocked_cons.len)
 		chk_stage_three 	:= c.config.protection.detect_stage_three(c.network.pps)
 
 		println("[${c.current_time}] Max PPS: ${c.config.protection.max_pps} | Max Cons: ${c.config.protection.max_connections}")

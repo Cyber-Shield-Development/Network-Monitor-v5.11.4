@@ -186,9 +186,9 @@ pub fn (mut p Protection) detect_stage_one(pps int, unique_con_count int) bool
 	return false
 }
 
-pub fn (mut p Protection) detect_stage_two(pps int, unique_con_count int, blocked_con_count int) bool
+pub fn (mut p Protection) detect_stage_two(pps int, con_count int, unique_con_count int, blocked_con_count int) bool
 {
-	if (pps > p.max_pps && unique_con_count > p.whitelisted_ips.len) { 
+	if (pps > p.max_pps && (unique_con_count == 0 || unique_con_count > p.max_con_per_port)) { 
 		return true
 	}
 

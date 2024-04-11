@@ -163,8 +163,8 @@ pub fn get_nload_info(mut n Network)
 /* Fetch inbound packet count and calculate PPS */
 pub fn fetch_pps_info(mut n Network)
 {
-	mut rx := "cat /sys/class/net/${n.iface}/statistics/rx_packets"
-	mut tx := "cat /sys/class/net/${n.iface}/statistics/tx_packets"
+	mut rx := "/sys/class/net/${n.iface}/statistics/rx_packets"
+	mut tx := "/sys/class/net/${n.iface}/statistics/tx_packets"
 	
 	old_rx := (os.read_file(rx) or { "" }).int()
 	old_tx := (os.read_file(tx) or { "" }).int()

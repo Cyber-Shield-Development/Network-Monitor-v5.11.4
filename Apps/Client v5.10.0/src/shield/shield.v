@@ -43,7 +43,7 @@ pub fn advanced_filter_mode(mut c CyberShield, current_tick int)
 	for 
 	{
 		/* Filter Mode Toggle */
-		if !c.config.protection.detect_stage_two(c.network.pps, c.retrieve_unique_cons().len, c.current_dump.blocked_t2_cons.len) { 
+		if !c.config.protection.detect_stage_two(c.network.pps, c.network.netstat_cons.len, c.retrieve_unique_cons().len, c.current_dump.blocked_t2_cons.len) { 
 			c.toggle_filter2()
 			return 
 		}
