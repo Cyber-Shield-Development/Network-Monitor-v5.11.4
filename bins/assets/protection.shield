@@ -1,0 +1,25 @@
+[@SETTINGS]
+{
+    token: 
+    interface: ens3
+    pps_to_filter: 10000
+    max_connections: 40
+    max_con_per_port: 5
+    auto_reset_rules: true
+    auto_add_rules: false
+}
+
+[@PERSONAL_RULES]
+{
+    
+}
+
+[@PROTECTED_IPS]
+{
+    
+}
+
+[@PROTECTED_PORTS]
+{
+
+}

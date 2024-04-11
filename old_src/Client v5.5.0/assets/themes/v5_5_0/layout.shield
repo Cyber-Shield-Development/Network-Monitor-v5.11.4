@@ -1,0 +1,43 @@
+  {DARKGRAY}╔═══════════════════════════════════╗{DEFAULT} {DARKGRAY}╔════════════════════════════════════════[{DEFAULT} {WHITE}Settings & Detection Info{DEFAULT} {DARKGRAY}]════════════════════════════════════╗{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {WHITE}╔═╗╦ ╦╔╗ ╔═╗╦═╗     CS © 2024{DEFAULT}    {DARKGRAY}║{DEFAULT} {DARKGRAY}║{DEFAULT} → {LIGHTCYAN}Max PPS:{DEFAULT}                           → {LIGHTCYAN}Protected IP(s):{DEFAULT}             → {LIGHTCYAN}Drop 2 System Enabled:{DEFAULT}            {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {WHITE}║  ╚╦╝╠╩╗║╣ ╠╦╝╗╦ ╦╦╔═╗╦  ╔╦╗{DEFAULT}    {DARKGRAY}║{DEFAULT} {DARKGRAY}║{DEFAULT} → {LIGHTCYAN}Max Connections:{DEFAULT}                   → {LIGHTCYAN}Protected Port(s):{DEFAULT}           → {LIGHTCYAN}Blocked Connections:{DEFAULT}              {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {WHITE}╚═╝ ╩ ╚═╝╚═╝╩╚╗╗╠═╣║║╣ ║   ║║{DEFAULT}    {DARKGRAY}║{DEFAULT} {DARKGRAY}║{DEFAULT} → {LIGHTCYAN}Auto clear new rule(s):{DEFAULT}            → {LIGHTCYAN}Under Attack:{DEFAULT}                → {LIGHTCYAN}Abused Port(s):{DEFAULT}                   {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}   {WHITE}Algorithm   ╚═╝╩ ╩╩╚═╝╩═╝═╩╝{DEFAULT}    {DARKGRAY}║{DEFAULT} {DARKGRAY}║{DEFAULT} → {LIGHTCYAN}Auto add my rule(s):{DEFAULT}               → {LIGHTCYAN}Filter System Enabled:{DEFAULT}       → {LIGHTCYAN}Log Count:{DEFAULT}                        {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}╚═════════════╗{DEFAULT} {WHITE}╦  ╦{DEFAULT} {DARKGRAY}╔══════════════╝{DEFAULT} {DARKGRAY}║{DEFAULT} → {LIGHTCYAN}Personal Rule(s):{DEFAULT}                  → {LIGHTCYAN}Drop System Enabled:{DEFAULT}         → {LIGHTCYAN}Server Status:{DEFAULT}                    {DARKGRAY}║{DEFAULT}
+      {LIGHTCYAN}Version{DEFAULT}   {DARKGRAY}╚═{DEFAULT}{WHITE}╚╗╔╝{DEFAULT}{DARKGRAY}═╝    {LIGHTCYAN}5.5.0{DEFAULT}       {DARKGRAY}╚═════════════════════════════════════════════════════════════════════════════════════════════════════════╝{DEFAULT}
+                   {WHITE}╚╝{DEFAULT}                                                           {DARKGRAY}[{DEFAULT} {WHITE}Packets Per Second{DEFAULT} {DARKGRAY}]{DEFAULT}
+  {DARKGRAY}╔═══════[ {WHITE}Device Infomation{DEFAULT} {DARKGRAY}]══════╗{DEFAULT}   
+  {DARKGRAY}║{DEFAULT}                                  {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}OS:{DEFAULT}                              {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}OS Version:{DEFAULT}                      {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}Kernel:{DEFAULT}                          {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}Shell:{DEFAULT}                           {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}╠═══════[{DEFAULT} {WHITE}Connection Info{DEFAULT} {DARKGRAY}]════════╣{DEFAULT}   
+  {DARKGRAY}║{DEFAULT}                                  {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}Interface:{DEFAULT}                       {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}System IP:{DEFAULT}                       {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}ms Response:{DEFAULT}                     {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}Upload:{DEFAULT}                          {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}Download:{DEFAULT}                        {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}PPS:{DEFAULT}                             {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}Connections:{DEFAULT}                     {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}[nload] Curr:{DEFAULT}                    {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}[nload] Avg:{DEFAULT}                     {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}[nload] Max:{DEFAULT}                     {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}[nload] Min:{DEFAULT}                     {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}[nload] Ttl:{DEFAULT}                     {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}║{DEFAULT} {LIGHTCYAN}Socket Port:{DEFAULT}                     {DARKGRAY}║{DEFAULT}   
+  {DARKGRAY}╚══════════════════════════════════╝{DEFAULT}   
+
+  {DARKGRAY}╔═════════════════════════════════════════════════[{DEFAULT} {WHITE}Motd, Contect Info & Purchase Plans{DEFAULT} {DARKGRAY}]═══════════════════════════════════════════════════════╗{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {DARKGRAY}[{DEFAULT} {WHITE}MOTD{DEFAULT} {DARKGRAY}]{DEFAULT}: {LIGHTCYAN}Cyber Shield is now for sale, for more information about how CyberShield works, join our discord and check out our #about channel{DEFAULT}  {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {LIGHTCYAN}further details. discord.gg/Ymsgdx5Atf{DEFAULT}                                                                                                       {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}                                                                                                                                               {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}                                                      {DARKGRAY}[{DEFAULT} {WHITE}Cheap & Affordable Prices {DARKGRAY}]{DEFAULT}                                                            {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {LIGHTCYAN}Cyber Shield Monitor: $5/m{DEFAULT}                                                                                                                   {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {LIGHTCYAN}Cyber Shield Monitor w/ Discord Notification: $10/m{DEFAULT}                                                                                          {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {LIGHTCYAN}Cyber Shield Monitor w/ Notification, Stage 1 Protection: $15/m{DEFAULT}                                                                              {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {LIGHTCYAN}Cyber Shield Monitor w/ Notification, Stage 1-2 Protection: $20/m{DEFAULT}                                                                            {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}  {LIGHTCYAN}Cyber Shield Monitor w/ Notification, Stage 1-3 Protection, Dumps: $40/m{DEFAULT}                                                                     {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}║{DEFAULT}                                                                                                             [ Discord Contact Info: Eruptsy ] {DARKGRAY}║{DEFAULT}
+  {DARKGRAY}╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝{DEFAULT}

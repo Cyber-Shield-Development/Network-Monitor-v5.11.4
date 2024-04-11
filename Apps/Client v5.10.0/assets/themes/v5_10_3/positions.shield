@@ -1,0 +1,109 @@
+// Most objects are for Position, Must provided 2 numbers with a comma in between
+// objects that end with _c stands for RBG Color, Must provided 3 numbers with a comma in between each
+// Use 'display' object to enable/display listed displays
+
+// TO DISABLE CERTAIN OUTPUTS, SET THE COORDINATES TO 0,0 
+
+//  Value Options for 'theme_layout_types'
+// - raw        (DISPLAY THE LAYOUT ONLY)
+// - graph      (DISPLAY THE LAYOUT WITH GRAPH)
+// - contable   (DISPLAY CONNECTION DATA TABLE VIEW)
+[@TERMINAL]
+{
+    title: Cyber Shield V | The future of DDOS Protection
+    theme_layout_type: graph
+    size: [43,148]
+    logo_flash_colors: false
+}
+
+[@GRAPH_DISPLAY]
+{
+    display: true
+    layout: [9,42]
+    data_width: 101
+    data_heigth: 21
+    data: [9,47]
+    online_data_c: [173,216,230]
+    offline_data_c: [173,216,230]
+}
+
+// Ignore (Isn't Implemented Yet)
+[@CONNTABLE_DISPLAY]
+{
+    display: false
+    table: [11,5]
+    border_c: [0,0,0]
+    text_c: [0,0,0]
+}
+    
+[@OS_DISPLAY]
+{
+    display: true
+    value_c: [255,255,0]
+    os_name: [11,9]
+    os_version: [12,17]
+    os_kernel: [13,13]
+    shell: [14,12]
+}
+
+// Ignore (Isn't Implemented Yet)
+[@HARDWARE_DISPLAY]
+{
+    display: true
+    value_c: [255,0,0]
+    cpu_name: [0,0]
+    cpu_cores: [0,0]
+    // FOR CPU USAGE, CORDINATE AT THE BEGINNING OF THE LABEL "CPU 1:"
+    // IF YOU HAVE MORE THAN 1 GPU, MAKE SURE YOU LEAVE ENOUGH SPACE. 2 LINES PER CPU CORE
+    cpu_usage: [16,4]
+    memory_type: [0,0]
+    memory_capacity: [0,0]
+    memory_used: [0,0]
+    memory_free: [0,0]
+    memory_usage: [21,4]
+    hdd_name: [0,0]
+    hdd_capacity: [0,0]
+    hdd_free: [0,0]
+    hdd_usage: [0,0]
+}
+    
+// DDoS Detection Settings & Current Network Data Information
+[@CONNECTION_DISPLAY]
+{
+    display: true
+    value_c: [255,255,0]
+
+    interface: [17,16]
+    system_ip: [18,16]
+    socket_port: [29,17]
+    ms: [19,18]
+    download_speed: [21,15]
+    upload_speed: [20,13]
+    pps_limit: [2,54]
+    max_connections: [3,62]
+    auto_reset: [4,69]
+    auto_add_rules: [5,66]
+    personal_rules_count: [6,63]
+    protected_ip_count: [2,99]
+    protected_port_count: [3,101]
+
+    pps: [22,10]
+    logo_as_status: false
+    logo: [1,3]
+    connection_count: [23,18]
+    nload_curr: [0,0]
+    nload_avg: [0,0]
+    nload_min: [0,0]
+    nload_max: [0,0]
+    nload_ttl: [0,0]
+    online_status: [6,128]
+    under_attack: [4,96]
+    filter_mode: [5,105]
+    drop_mode: [6,103]
+    dump_mode: [2,136]
+    blocked_con_count: [3,134]
+    abused_ports_count: [4,129]
+    log_count: [5,124]
+    openvpn_install: [0,0]
+    apache_install: [0,0]
+}

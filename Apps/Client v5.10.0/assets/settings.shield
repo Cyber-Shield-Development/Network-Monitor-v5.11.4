@@ -1,0 +1,37 @@
+[@SETTINGS]
+{
+    token: 
+    interface: ens3
+    monitor_port: 3023
+    cs_ssh_port: 3024
+    api_port: 80
+    max_pps: 10000
+    max_connections: 40
+    max_con_per_port: 5
+    auto_reset_rules: true
+    auto_add_rules: false
+}
+
+[@PERSONAL_RULES]
+{
+    sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A INPUT -p tcp --dport 80 -m hashlimit --hashlimit-mode srcip --hashlimit-above 20/min --hashlimit-burst 5 --hashlimit-srcmask 32 --hashlimit-name http-limits -j DROP
+    sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+}
+
+[@PROTECTED_IPS]
+{
+    
+}
+
+[@PROTECTED_PORTS]
+{
+    
+}
+
+// Add service ports in-use
+[@PROTECTED_SERVICES]
+{
+    80:APACHE:service apache2 restart
+    8080:WEB_SERVER:/root/app/start -p 44
+}
