@@ -1,5 +1,13 @@
 module utils
 
+pub fn is_hostname_valid(hostname string) bool 
+{
+	if validate_ipv4_format(hostname) || validate_ipv6_format(hostname) {
+		return true
+	}
+
+	return false
+}
 
 /* Validate IPv4 format */
 pub fn validate_ipv4_format(ip string) bool 

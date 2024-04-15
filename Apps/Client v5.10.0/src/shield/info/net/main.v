@@ -54,7 +54,7 @@ pub fn network__init(interfacee string) Network
 	n.system_ip = n.interfaces[interfacee][0]
 
 	go get_nload_info(mut &n)
-	get_connection_speed(mut &n)
+	// get_connection_speed(mut &n)
 
 	return n
 }

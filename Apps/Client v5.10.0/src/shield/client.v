@@ -14,11 +14,12 @@ pub fn monitor_listener(mut c CyberShield)
 		}
 
 		mut client_ip := "${client.peer_ip()}".replace("[::ffff:", "").split("]:")[0].trim_space()
-		if c.servers.monitor_listener_toggle && client_ip !in c.config.protection.whitelisted_ips {
-			client.close() or { return }
-			c.servers.toggle_monitor_listener()
-			return
-		}
+		// if c.servers.monitor_listener_toggle && client_ip !in c.config.protection.whitelisted_ips {
+		// 	client.close() or { return }
+		// 	c.servers.monitor.close() or { return }
+		// 	c.servers.toggle_monitor_listener()
+		// 	return
+		// }
 
 		client.set_read_timeout(time.infinite)
 		c.servers.clients << client

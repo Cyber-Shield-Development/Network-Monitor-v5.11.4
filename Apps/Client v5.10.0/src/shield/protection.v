@@ -95,11 +95,9 @@ pub fn protection__init() Protection
 	settings := utils.get_block_data(protection_file, "[@SETTINGS]")
 	for line in settings
 	{
-		println("${line}")
 		if line.contains("@PERSONAL_RULES") { break }
 		key_info := line.split(":")
 		if key_info.len != 2 { continue}
-		println("${key_info}")
 		match key_info[0] 
 		{
 			utils.arr_starts_with(key_info, "token") {

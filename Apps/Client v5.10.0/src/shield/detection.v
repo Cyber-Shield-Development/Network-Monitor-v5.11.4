@@ -3,32 +3,39 @@ module shield
 import os
 import time
 
-import src.utils
+import src.shield.utils
+import src.shield.utils.term
 import src.shield.info.net
 import src.shield.info.net.netstat as ns
 import src.shield.info.net.tcpdump as td
 
 pub fn (mut c CyberShield) start_detection()
 {
-	// TODO: Initialize Graph 
+	/* Start the UI if enabled */
+	c.graph = term.graph_init__(c.config.ui.graph_layout,  c.config.ui.graph.data_heigth, c.config.ui.graph.data_width)
+	c.bits_graph = term.graph_init__(c.config.ui.bits_graph_layout,  c.config.ui.bits_graph.data_heigth, c.config.ui.bits_graph.data_width)
+	c.bytes_graph = term.graph_init__(c.config.ui.bytes_graph_layout,  c.config.ui.bytes_graph.data_heigth, c.config.ui.bytes_graph.data_width)
 	for 
 	{
 		c.tick++
 		c.current_time = utils.current_time()
+
 		go net.fetch_pps_info(mut &c.network)
 		go net.get_nload_info(mut &c.network)
 		go set_tcpdump_vars(mut &c)
 		
 		c.network.netstat_cons = ns.grab_cons()
+		go do(mut c, c.network.pps) // Render Graph
+		go do_bits(mut c, c.network.mbits_ps) // Render Graph
+		go do_bytes(mut c, c.network.mbytes_ps) // Render Graph
 
 		chk_stage_one 		:= c.config.protection.detect_stage_one(c.network.pps, c.retrieve_unique_cons().len)
 		chk_stage_two 		:= c.config.protection.detect_stage_two(c.network.pps, c.network.netstat_cons.len, c.retrieve_unique_cons().len, c.current_dump.blocked_cons.len)
 		chk_stage_three 	:= c.config.protection.detect_stage_three(c.network.pps)
 
 		println("[${c.current_time}] Max PPS: ${c.config.protection.max_pps} | Max Cons: ${c.config.protection.max_connections}")
-		println("[${c.current_time}] PPS: ${c.network.pps} | Cons: ${c.network.netstat_cons.len} | Unique: ${c.retrieve_unique_cons().len} | Blocked: ${c.current_dump.blocked_cons.len} | Dropped: ${c.current_dump.dropped_cons.len}")
-		println("[${c.current_time}] Stage 1: ${chk_stage_one} | Stage 2: ${chk_stage_two} | Stage 3: ${chk_stage_three}")
-		println("[${c.current_time}] Filter 1: ${c.is_filter1_running()} | Filter 2: ${c.is_filter2_running()} | Filter 3: ${c.is_drop_running()}")
+		println("[${c.current_time}] PPS: ${c.network.pps} | Cons: ${c.network.netstat_cons.len} | Unique: ${c.retrieve_unique_cons().len} | Blocked: ${c.current_dump.blocked_cons.len} | Blocked_t2: ${c.current_dump.blocked_t2_cons.len} Dropped: ${c.current_dump.dropped_cons.len}")
+		println("[${c.current_time}] Stage 1: ${chk_stage_one}/${c.is_filter1_running()} | Stage 2: ${chk_stage_two}/${c.is_filter2_running()} | Stage 3: ${chk_stage_three}/${c.is_drop_running()}")
 		
 		if !c.is_filter1_running() && chk_stage_one {
 			/* Ensure user has access to the filter system */
@@ -92,14 +99,25 @@ pub fn (mut c CyberShield) start_detection()
 	}
 }
 
+pub fn do(mut c CyberShield, pps int) {
+	c.graph.append_to_graph(pps) or { return }
+}
+
+pub fn do_bits(mut c CyberShield, pps int) {
+	c.bits_graph.append_to_graph(pps) or { return }
+}
+
+pub fn do_bytes(mut c CyberShield, pps int) {
+	c.bytes_graph.append_to_graph(pps) or { return }
+}
+
 pub fn (mut c CyberShield) restart_attack_filter() 
 {
+	c.current_dump.dump_file()
 	c.under_attack = false
 	c.filter_one_mode = false
 	c.filter_two_mode = false
 	c.drop_mode = false
-	c.current_dump.blocked_cons = []ns.NetstatCon{}
-	c.current_dump.dropped_cons = []ns.NetstatCon{}
 	c.current_dump = Dump{}
 }
 

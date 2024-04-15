@@ -97,3 +97,38 @@ pub fn get_key_value_from_json(json_data string, key string) string
 
 	return ""
 }
+
+pub fn arr2string(arr []string, delim string) string 
+{
+	mut new := ""
+	for i, element in arr 
+	{ 
+		if i == arr.len-1 {
+			new += element
+		} else {
+			new += "${element}${delim}"
+		}
+	}
+
+	return new
+}
+
+pub fn does_str_contains_chars(data string) bool 
+{
+	chars := "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+	for ch in data {
+		if ch.ascii_str() in chars.split("") { return true }
+	}
+
+	return false
+}
+
+pub fn arr2str(arr []string, delim string) string 
+{
+	mut new := ""
+	for element in arr {
+		new += element + delim
+	}
+
+	return new
+}

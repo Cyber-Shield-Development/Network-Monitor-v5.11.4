@@ -21,7 +21,7 @@ pub fn place_text(mut client net.TcpConn, pos []string, color []string, data str
 	time.sleep(80*time.millisecond)
 }
 
-pub fn list_text(mut c net.TcpConn, p []string, t string, output_name string) {
+pub fn list_text(mut c net.TcpConn, p []string, t string) {
 	if p == [] || p == ["0","0"] { return }
 
 	mut row := p[0].int()

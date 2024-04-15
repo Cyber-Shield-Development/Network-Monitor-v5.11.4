@@ -3,6 +3,7 @@ module shield
 import os
 import time
 
+import src.shield.utils.term
 import src.shield.info.net
 import src.shield.info.net.netstat as ns
 import src.shield.info.net.tcpdump as td
@@ -23,12 +24,13 @@ pub fn filter_mode(mut c CyberShield, current_tick int)
 			if c.config.protection.is_con_whitlisted(con.external_ip) { continue }
 
 			/* Skip if connection has already been blocked */
-			if c.current_dump.is_con_blocked(mut con) { continue }
+			if c.current_dump.is_ip_blocked(con.external_ip) { continue }
 			
+			c.current_dump.block_con(mut con)
 			if con.ip_t == ns.IP_T.ipv4 {
 				os.execute("sudo iptables -A INPUT -s ${con.external_ip} -p tcp -j DROP; sudo iptables -A OUTPUT -s ${con.external_ip} -p tcp -j DROP")
-			} else {
-				os.execute("sudo ip6tablesln -A INPUT -s ${con.external_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.external_ip} -j DROP")
+			} else if con.ip_t == ns.IP_T.ipv6 {
+				os.execute("sudo ip6tables -A INPUT -s ${con.external_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.external_ip} -j DROP")
 			}
 		}
 		
@@ -50,21 +52,26 @@ pub fn advanced_filter_mode(mut c CyberShield, current_tick int)
 
 		for mut con in c.network.tcpdump_req
 		{
+			if con.req_direction != td.ConnectionDirection.inbound { continue }
+
 			/* Skip if the connection is whitelisted */
 			if c.config.protection.is_con_whitlisted(con.source_ip) { continue }
 
 			/* Add pkt data of a possible connection attacking the network and skip if already blocked */
-			c.current_dump.append_pkt_data(con.source_ip, con.retrieve_data())
-			if c.current_dump.is_con_blocked2(mut con) { continue }
+			c.current_dump.append_pkt_data(con.destination_ip, con.retrieve_data())
+			if c.current_dump.is_ip_blocked(con.destination_ip) { continue }
 
 			/* Block block block */
-			if con.req_direction == .outbound && con.hostname_t == .ipv4  {
-				os.execute("sudo iptables -A INPUT -s ${con.source_ip} -p tcp -j DROP; sudo iptables -A OUTPUT -s ${con.source_ip} -p tcp -j DROP")
-			} else if con.req_direction == .outbound && con.hostname_t == .ipv6 {
-				os.execute("sudo ip6tables -A INPUT -s ${con.source_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.source_ip} -j DROP")
+			c.current_dump.adv_block_con(mut con)
+			if con.hostname_t == td.Protocol_T.ipv4  {
+				println("${term.success_sym} Blocking IPV4 ==> ${con.destination_ip}")
+				os.execute("sudo iptables -A INPUT -s ${con.destination_ip} -p tcp -j DROP; sudo iptables -A OUTPUT -s ${con.destination_ip} -p tcp -j DROP")
+			} else if con.hostname_t == td.Protocol_T.ipv6 {
+				println("${term.failed_sym} Blocking IPV6 ==> ${con.destination_ip}")
+				os.execute("sudo ip6tables -A INPUT -s ${con.destination_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.destination_ip} -j DROP")
 			}
 		}
-		os.execute("sudo ip6tables-save; sudo ip6tables-save")
+		os.execute("sudo iptables-save; sudo ip6tables-save")
 		println("[ + ] (ADVANCED_FILTER;${current_tick}:${c.tick}) ${c.current_dump.blocked_t2_cons.len} Connections blocked. Checking if attack has stopped or block more connections.....!")
 		time.sleep(2*time.second)
 	}

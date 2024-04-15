@@ -6,6 +6,7 @@ import src.shield.utils
 import src.shield.config
 import src.shield.info.net
 import src.shield.services
+import src.shield.utils.term
 import src.shield.info.net.netstat as ns
 
 pub struct Config 
@@ -57,6 +58,9 @@ pub struct CyberShield
 		filter_one_mode 			bool
 		filter_two_mode				bool
 		drop_mode 					bool
+		graph 						term.Graph
+		bits_graph 					term.Graph
+		bytes_graph 				term.Graph
 
 		current_dump				Dump
 		

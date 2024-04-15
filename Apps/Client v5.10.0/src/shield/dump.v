@@ -1,5 +1,7 @@
 module shield
 
+import os
+
 import src.shield.info.net.netstat as ns
 import src.shield.info.net.tcpdump as td
 
@@ -56,36 +58,17 @@ pub fn start_new_dump(iface string, ip string, locate string, isp string, stime 
 pub fn (mut d Dump) append_pkt_data(ip string, pkt_data string)
 { d.captured_pkt_data["${ip}"] = pkt_data }
 
-/*
-*	[@DOC]
-*	pub fn (mut d Dump) is_con_blocked(ip string) bool 
-*
-*	- Validate if an IP has been blocked in the filter system
-*/
-pub fn (mut d Dump) is_con_blocked(mut con_chk ns.NetstatCon) bool 
+pub fn (mut d Dump) is_ip_blocked(ip string) bool 
 {
-	for mut con in d.blocked_cons {
-		if con.external_ip == con_chk.external_ip { return true }
+	for con in d.blocked_cons {
+		if con.external_ip == ip { return true }
 	}
 
-	d.block_con(mut con_chk)
-	return false
-}
-
-/*
-*	[DOC]
-*	pub fn (mut d Dump) is_con_blocked2(ip string) bool
-*
-*	- Validate if an IP has been blocked in the advanced filter system
-*/
-pub fn (mut d Dump) is_con_blocked2(mut con_chk td.TCPDump) bool 
-{
-	for mut con in d.blocked_t2_cons {
-		if con.source_ip == con_chk.source_ip { return true }
+	for tcp_con in d.blocked_t2_cons {
+		if tcp_con.destination_ip == ip { return true }
 	}
 
-	d.adv_block_con(mut con_chk)
-	return false
+	return false 
 }
 
 /*
@@ -103,18 +86,19 @@ pub fn (mut d Dump) is_con_dropped(ip string) bool
 	return false
 }
 
-fn (mut d Dump) block_con(mut con ns.NetstatCon)
+pub fn (mut d Dump) block_con(mut con ns.NetstatCon)
 {
 	d.blocked_cons << con
-	d.max_cons_reeached = d.blocked_cons.len
+	d.max_cons_reeached = d.blocked_cons.len + d.blocked_t2_cons.len
 }
 
-fn (mut d Dump) adv_block_con(mut con td.TCPDump)
+pub fn (mut d Dump) adv_block_con(mut con td.TCPDump)
 {
 	d.blocked_t2_cons << con
+	d.max_cons_reeached = d.blocked_cons.len + d.blocked_t2_cons.len
 }
 
 pub fn (mut d Dump) dump_file()
 {
-
+	os.write_file("test.txt", "${d}") or { return }
 }

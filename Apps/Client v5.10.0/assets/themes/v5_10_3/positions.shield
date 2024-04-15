@@ -19,10 +19,32 @@
 [@GRAPH_DISPLAY]
 {
     display: true
-    layout: [9,42]
-    data_width: 101
-    data_heigth: 21
-    data: [9,47]
+    layout: [14,35]
+    data_width: 109
+    data_heigth: 8
+    data: [15,40]
+    online_data_c: [173,216,230]
+    offline_data_c: [173,216,230]
+}
+
+[@MBITS_GRAPH_DISPLAY]
+{
+    display: true
+    layout: [25,30]
+    data_width: 50
+    data_heigth: 8
+    data: [26,39]
+    online_data_c: [173,216,230]
+    offline_data_c: [173,216,230]
+}
+
+[@MBYTES_GRAPH_DISPLAY]
+{
+    display: true
+    layout: [25,90]
+    data_width: 50
+    data_heigth: 8
+    data: [26,99]
     online_data_c: [173,216,230]
     offline_data_c: [173,216,230]
 }
@@ -87,7 +109,7 @@
     protected_ip_count: [2,99]
     protected_port_count: [3,101]
 
-    pps: [22,10]
+    pps: [40,43]
     logo_as_status: false
     logo: [1,3]
     connection_count: [23,18]
