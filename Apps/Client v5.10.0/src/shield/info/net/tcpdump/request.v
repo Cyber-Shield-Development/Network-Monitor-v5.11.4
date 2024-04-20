@@ -40,15 +40,19 @@ pub fn new_req(arr []string, from []string, to []string) TCPDump {
 	mut new := TCPDump{
 		timestamp: arr[0],
 		protocol: arr[1],
+		hostname_t: hostname2type(from[0]),
 		source_ip: from[0],
 		source_port: from[1].int(),
 		destination_ip: to[0],
 		destination_port: to[1].int(),
 		pkt_length: arr[arr.len-1].int()
 	}
-
+	
 	new.flags = new.fetch_flags(arr)
-	new.parse_hostname()
+
+	if new.hostname_t == Protocol_T.url {
+		new.fix_ip()
+	}
 
 	return new
 }
@@ -66,81 +70,49 @@ pub fn (mut td TCPDump) fetch_flags(request_info []string) string
 	return ""
 }
 
-pub fn (mut td TCPDump) parse_hostname()
-{
-	if utils.validate_ipv4_format(td.destination_ip) {
-		td.hostname_t = Protocol_T.ipv4
-		return
-	} else if utils.validate_ipv6_format(td.destination_ip) {
-		td.hostname_t = Protocol_T.ipv6
-		return
-	} else if utils.validate_url_format(td.destination_ip) {
-		td.hostname_t = Protocol_T.url
-
-		// TODO: Parse IPV4 out of URL before resolving
-		// 		  DNS on the domain/URL
-		check := td.does_url_have_ipv4()
-		if utils.validate_ipv4_format(check) {
-			td.destination_ip = check
-			td.hostname_t = Protocol_T.ipv4
-			return
+pub fn hostname2type(hostname string) Protocol_T {
+	match true {
+		utils.validate_ipv4_format(hostname) {
+			return Protocol_T.ipv4
 		}
-		
-		/* Convert to IPV4 */
-		println("[ - ] ${check} Unable to get IPV4 from URL. Resolving....")
-		ipv4_chk := td.hostname_to_ipv4()
-		if !utils.validate_ipv4_format(ipv4_chk) {
-			println("[ - ] WARNING, Unable to resolve hostname....!\r\n\t=> Hostname: ${td.destination_ip}......!\r\n\t=> Results: ${ipv4_chk}")
-			return 
+		utils.validate_ipv6_format(hostname) {
+			return Protocol_T.ipv6
 		}
-
-		td.destination_ip = ipv4_chk
-		td.hostname_t = Protocol_T.ipv4
+		utils.validate_url_format(hostname) {
+			return Protocol_T.url
+		} else { 
+			return Protocol_T._null
+		}
 	}
 }
 
-
-// example of lines this function parses
-// c-73-32-44-63.hsd1.tn.comcast.net
-// 187-072-141-082.static.ctbctelecom.com.br
-// 
-pub fn (mut td TCPDump) does_url_have_ipv4() string
+pub fn (mut td TCPDump) fix_ip()
 {
-    copy := td.destination_ip
-	args := copy.split("-")
-	if args.len < 4 { return "" }
-
-	mut ip := rm_chrs(arr2ip(args[0..4]))
-
-	if ip.ends_with(".") {
-		ip = ip.substr(0, ip.len-1)
+	// TODO: Parse IPV4 out of URL before resolving
+	// 		  DNS on the domain/URL
+	mut check := utils.retrieve_ipv4(td.destination_ip)
+	
+	if check.starts_with("0") {
+		check = check.substr(1, check.len)
 	}
 
-	return ip
-}
-
-pub fn rm_chrs(data string) string {
-	mut new := ""
-
-	for ch in data {
-		if ch.is_letter() { break }
-		new += ch.ascii_str()
+	if !utils.validate_ipv4_format(check) {
+		return
 	}
 
-	return new
+	println("[ + ] SETTINGS ${check}")
+	td.destination_ip = check
+	td.hostname_t = Protocol_T.ipv4
 }
-
-pub fn arr2ip(arr []string)string 
-{ return "${arr}".replace("['", "").replace("']", "").replace("', '", ".") }
 
 pub fn (mut td TCPDump) hostname_to_ipv4() string
 { 
-	args := os.execute("timeout 2 'host -t A ${td.destination_ip}'").output 
+	args := os.execute("timeout 2 host -t A ${td.destination_ip}").output 
 	return args[args.len-1].ascii_str()
 }
 
 pub fn fetch_tcpdump() []TCPDump {
-	go os.execute("timeout 2 tcpdump -i ens3 -x ip > pcap_data.shield")
+	go os.execute("timeout 2 tcpdump -i ens3 -x -n ip > pcap_data.shield")
 	os.execute("timeout 2 tcpdump -i ens3 -x ip6 >> pcap_data.shield").output
 	
 	time.sleep(30*time.millisecond)
@@ -152,24 +124,30 @@ pub fn fetch_tcpdump() []TCPDump {
 	mut dump_cons := []TCPDump{}
 
 	for line in tcpdump_data {
-		line_info := line.split(" ")
-		if line_info.len < 3 { continue }
+		line_args := line.split(" ")
+		if line_args.len < 3 { continue }
 
 		/* Detection for a new connection line */
-		if !line.starts_with(" ") && line_info.len > 10 {
-			// Hostname will always include a period for at-least the point
-			from_hostname := line_info[2].split(".")
-			to_hostname := line_info[2].split(".")
+		if !line.starts_with(" ") && line_args.len > 10 {
+			_ := line_args[2] // from_raw_addr
+			from_args := line_args[2].split(".")
 
-			from_address := line_info[2].replace(".${from_hostname[from_hostname.len-1]}", "")
-			from_port := from_hostname[from_hostname.len-1]
+			_ := line_args[4] // to_raw_addr
+			to_args := line_args[4].split(".")
 
-			to_address := line_info[2].replace(".${to_hostname[to_hostname.len-1]}", "")
-			to_port := to_hostname[to_hostname.len-1]
+			from_addr := utils.arr2ip(from_args[0..(from_args.len-1)])
+			mut from_port := from_args[from_args.len-1] 
+
+			to_addr := utils.arr2ip(to_args[0..(to_args.len-1)])
+			mut to_port := to_args[to_args.len-1].replace(":", "")
 			
-			if utils.is_hostname_valid(to_address) { continue }
+			if from_port == "http" { from_port = "80" }
+			if to_port == "http" { to_port = "80" }
+			
+			if from_addr.contains("ovh") { continue }
+			if !utils.is_hostname_valid(from_addr) { continue }
 
-			dump_cons << new_req(line_info, [from_address, from_port], [to_address, to_port])
+			dump_cons << new_req(line_args, [from_addr, from_port], [to_addr, to_port])
 		} else {
 			if dump_cons.len > 0 {
 				dump_cons[dump_cons.len-1].pkt_data << line.trim_space()

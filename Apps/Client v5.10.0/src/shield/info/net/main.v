@@ -18,8 +18,8 @@ pub struct Network
 		pps 			int
 		inbound_pps		int
 		outbound_pps	int
-		mbits_ps		int
-		mbytes_ps		int
+		mbits_ps		f64
+		mbytes_ps		f64
 		upload			string
 		download		string
 		ms				string
@@ -52,9 +52,7 @@ pub fn network__init(interfacee string) Network
 		exit(0)
 	}
 	n.system_ip = n.interfaces[interfacee][0]
-
-	go get_nload_info(mut &n)
-	// get_connection_speed(mut &n)
+	get_connection_speed(mut &n)
 
 	return n
 }
@@ -177,8 +175,21 @@ pub fn fetch_pps_info(mut n Network)
 
 	n.inbound_pps = inbound_pps
 	n.outbound_pps = outbound_pps
-	n.mbits_ps = new_rx * 8
-	n.mbytes_ps = inbound_pps * n.mbits_ps / 1000000
+	n.mbits_ps = "${new_rx}".f64() * 8
+	n.mbytes_ps = "${inbound_pps}".f64() * "${n.mbits_ps}".f64() / 1000000
 
 	n.pps = inbound_pps
+	n.fix_output()
+}
+
+pub fn (mut n Network) fix_output() {
+	mut args := "${n.mbits_ps}".split(".")
+	if args[1].len > 2 {
+		n.mbits_ps = (args[0] + "." + args[1].substr(0, 2)).f64()
+	}
+
+	args = "${n.mbytes_ps}".split(".")
+	if args[1].len > 2 {
+		n.mbytes_ps = (args[0] + "." + args[1].substr(0, 2)).f64()
+	}
 }

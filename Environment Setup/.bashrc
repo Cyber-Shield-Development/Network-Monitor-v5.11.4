@@ -1,7 +1,7 @@
-alias monitor="sudo /home/ubuntu/watch"
+alias monitor="sudo /root/watch"
 alias reset="sudo iptables -F; sudo service ssh restart"
-alias drop="sudo /home/ubuntu/drop"
-alias m='sudo watch -n1 "./drop 22; ./drop 80; ./drop 1194"'
+alias drop="sudo /root/drop"
+alias m='sudo watch -n1 "/root/drop 22; ./drop 80; /root/drop 1194; /root/drop 420"'
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples

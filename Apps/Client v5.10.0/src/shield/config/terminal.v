@@ -1,6 +1,6 @@
 module config
 
-import src.utils
+import src.shield.utils
 
 pub struct TerminalSettings 
 {

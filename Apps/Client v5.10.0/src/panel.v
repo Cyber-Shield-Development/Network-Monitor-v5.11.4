@@ -33,6 +33,16 @@ pub fn local_cmd_handler(mut c shield.CyberShield)
 				"show" { 
 					println("${c}")
 				}
+				"show_dump" {
+					println("${c.current_dump}")
+				}
+				"show_protection" {
+					println("${c.config.protection}")
+				}
+				"start" {
+					c.servers = shield.start_servers(c.cnc_port, c.ssh_port)
+					go shield.monitor_listener(mut &c)
+				}
 				"clear", "cls", "c" {
 					println("${term.clear}")
 				}
@@ -54,9 +64,6 @@ pub fn local_cmd_handler(mut c shield.CyberShield)
 				}
 				"stats" {
 					// c.output_stats()
-					break
-				}
-				"start" {
 					break
 				} else { println(invalid_arguments) } 
 			}

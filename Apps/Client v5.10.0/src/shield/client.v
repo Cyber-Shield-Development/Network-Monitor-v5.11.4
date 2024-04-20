@@ -14,16 +14,36 @@ pub fn monitor_listener(mut c CyberShield)
 		}
 
 		mut client_ip := "${client.peer_ip()}".replace("[::ffff:", "").split("]:")[0].trim_space()
-		// if c.servers.monitor_listener_toggle && client_ip !in c.config.protection.whitelisted_ips {
-		// 	client.close() or { return }
-		// 	c.servers.monitor.close() or { return }
-		// 	c.servers.toggle_monitor_listener()
-		// 	return
-		// }
+		if c.servers.monitor_listener_toggle && (client_ip !in c.config.protection.whitelisted_ips || (c.config.protection.temporary_whitelist.len > 0 && client_ip !in c.config.protection.temporary_whitelist)) {
+			client.close() or { return }
+			c.servers.monitor.close() or { return }
+			c.servers.toggle_monitor_listener()
+			return
+		}
 
 		client.set_read_timeout(time.infinite)
 		c.servers.clients << client
-		display_monitor(mut c, mut client)
+		go display_monitor(mut c, mut client)
+	}
+}
+
+pub fn ssh_listener(mut c CyberShield) {
+	for {
+		mut ssh_client := c.servers.ssh.accept() or {
+			println("[ X ] Error, Unable to accept SSH socket connections....!")
+			continue
+		}
+
+		mut client_ip := "${ssh_client.peer_ip()}".replace("[::ffff:", "").split("]:")[0].trim_space()
+		if c.servers.monitor_listener_toggle && (client_ip !in c.config.protection.whitelisted_ips || (c.config.protection.temporary_whitelist.len > 0 && client_ip !in c.config.protection.temporary_whitelist)) {
+			ssh_client.close() or { return }
+			c.servers.ssh.close() or { return }
+			return
+		}
+
+		ssh_client.set_read_timeout(time.infinite)
+		c.servers.clients << ssh_client
+		go ssh_client_handler(mut c, mut ssh_client)
 	}
 }
 

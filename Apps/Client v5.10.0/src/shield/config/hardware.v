@@ -1,6 +1,6 @@
 module config
 
-import shield.utils 
+import src.shield.utils 
 pub struct HardwareSettings 
 {
 	pub mut:

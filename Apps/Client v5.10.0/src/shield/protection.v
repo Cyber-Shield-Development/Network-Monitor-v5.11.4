@@ -22,6 +22,17 @@ pub struct Filter
 		dropped_ips 		[]ns.NetstatCon
 }
 
+pub struct Service {
+	pub mut:
+		name		string
+		port 		int 
+		protocol 	string // Protocol its on (Avoid dropping port which causes socket app(s) to crash)
+		// App Restart command to drop the maxed port every second during the attack
+		// Quick app/server restart applications can keep users connected to it during attacks. 
+		// Make sure clients application have re-connect upon disconnections. Most have it by default
+		command 	string 
+}
+
 pub struct Protection 
 {
 	pub mut:
@@ -57,20 +68,18 @@ pub struct Protection
 		whitelisted_ports 		[]int
 
 		/* {"SERVICE_PORT": ["SERVICE_NAME_OR_TYPE", "RESTART_SERVICE_COMMAND"]} */
-		whitelisted_services 	map[string][]string
+		services 				[]Service
 		server_hostname 		string
 		server_ipv4				string
 		server_ipv6				string
 		ssh_ports 				[]int
-		openvpn_port 			int
-		web_ports 				[]int
 }
 
 pub const protection_filepath = "assets/settings.shield"
 
 pub fn protection__init() Protection 
 {
-	mut p := Protection{ server_hostname: os.execute("hostname -f").output }
+	mut p := Protection{ server_hostname: os.execute("hostname -f").output, services: []Service{} }
 	protection_file := os.read_lines(protection_filepath) or {
 		println("[ X ] Error, Unable to read protection config file\r\n\t=> Path: '${protection_filepath}'")
 		exit(0)
@@ -81,13 +90,6 @@ pub fn protection__init() Protection
 		if ip.trim_space() != "" { 
 			p.whitelisted_ips << ip.trim_space()
 		}
-	}
-
-	port_data := utils.get_block_data(protection_file, "[@PROTECTED_PORTS]")
-	for port in port_data { 
-		if port.trim_space().int() != 0 && port.trim_space() != "" { 
-			p.whitelisted_ports << port.int() 
-		} 
 	}
 
 	p.personal_rules = utils.get_block_data(protection_file, "[@PERSONAL_RULES]")
@@ -118,6 +120,22 @@ pub fn protection__init() Protection
 		}
 	}
 
+	services_hosted := map[string][]string{}
+	services := utils.get_block_data(protection_file, "[@PROTECTED_SERVICES]")
+
+	for line in services {
+		if line.trim_space() != "" { 
+			line_arg := line.trim_space().split(":")
+
+			p.services << Service{
+				name: line_arg[0],
+				port: line_arg[1].int(),
+				protocol: line_arg[2],
+				command: line_arg[3]
+			}
+		}
+	}
+
 	return p
 }
 
@@ -128,7 +146,7 @@ pub fn (mut p Protection) add_personal_rules()
 		if rule.len < 2 { continue }
 		os.execute("${rule}")
 	}
-	os.execute("iptables-save")
+	os.execute("iptables-save; ip6tables-save")
 
 	println("[ + ] All rules applied....!")
 }
@@ -145,7 +163,7 @@ pub fn (mut p Protection) temporary_whitlist_cons(mut cons []ns.NetstatCon)
 {
 	for mut con in cons {
 		/* Skip If the connection is already whitlisted or temporarily whitlisted */
-		if con.external_ip in p.whitelisted_ips && con.external_ip in p.temporary_whitelist { continue }
+		if con.external_ip in p.whitelisted_ips || con.external_ip in p.temporary_whitelist { continue }
 		
 		/* Detect for established connections to temporary whitlist */
 		if con.state == ns.State_T.established {
@@ -166,9 +184,21 @@ pub fn (mut p Protection) is_port_whitlisted(port int) bool
 	return false
 }
 
+pub fn (mut p Protection) is_port_serviced(port int) bool {
+	for service in p.services {
+		if port == service.port { return true }
+	}
+
+	return false
+}
+
 pub fn (mut p Protection) is_con_whitlisted(ip string) bool
 {
-	if ip in p.whitelisted_ips || ip in p.temporary_whitelist {
+	if ip in p.whitelisted_ips {
+		return true
+	}
+
+	if p.temporary_whitelist.len > 0 && ip in p.temporary_whitelist {
 		return true
 	}
 
@@ -184,9 +214,15 @@ pub fn (mut p Protection) detect_stage_one(pps int, unique_con_count int) bool
 	return false
 }
 
+pub fn (mut p Protection) is_stage_one_done(pps int, unique_con_count int) bool 
+{ return (unique_con_count < p.max_connections && pps < p.max_pps) }
+
+pub fn (mut p Protection) is_stage_two_n_three_done(pps int) bool 
+{ return (pps < p.max_pps) }
+
 pub fn (mut p Protection) detect_stage_two(pps int, con_count int, unique_con_count int, blocked_con_count int) bool
 {
-	if (pps > p.max_pps && (unique_con_count == 0 || unique_con_count > p.max_con_per_port)) { 
+	if pps > p.max_pps && (unique_con_count == 0 || unique_con_count > p.max_con_per_port) { 
 		return true
 	}
 

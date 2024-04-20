@@ -6,6 +6,7 @@ import src.shield.utils
 import src.shield.config
 import src.shield.info.net
 import src.shield.services
+import src.shield.services.web.apache
 import src.shield.utils.term
 import src.shield.info.net.netstat as ns
 
@@ -66,6 +67,7 @@ pub struct CyberShield
 		
 		current_time 				string 
 		start_up_time 				string // Time CyberShield started up..
+		last_attack_time			string
 
 		error_logs 					[]string
 }
@@ -117,38 +119,49 @@ pub fn (mut c CyberShield) network_protection_scan()
 	if c.ssh_port > 0 { c.config.protection.whitelisted_ports << c.ssh_port }
 	if c.web_port > 0 { c.config.protection.whitelisted_ports << c.web_port }
 
+	/* Whitelist the system's network */
+	mut sys_hostnames := c.network.interfaces[c.network_interface]
+	c.config.protection.server_hostname = os.execute("hostname -f").output
+	c.config.protection.server_ipv4 = sys_hostnames[0] 
+	c.config.protection.server_ipv6 = sys_hostnames[1] 
+	c.config.protection.whitelisted_ips << sys_hostnames[0] 
+
 	// Detect SSH Login IPs to Whitelist
 	found_ips := services.last_ssh_logins()
-	if found_ips.len > 0 { 
-		for ip in found_ips { 
-			if ip !in c.config.protection.whitelisted_ips { 
-				c.config.protection.whitelisted_ips << ip 
-			} 
-		}
-	} else { 
+	if found_ips.len == 0 { 
 		println("[ - ] WARNING, No IPs was found in last SSH logins. This is used to whitlist the owner of the server! Whitelist your IP via configuration file for pre-caution reasons")
 	}
 
-	// Detect OpenVPN Port To Whitelist
-	if !services.check_for_ovpn() {
+	for ip in found_ips { 
+		if ip !in c.config.protection.whitelisted_ips && ip.trim_space() != "" { 
+			c.config.protection.whitelisted_ips << ip 
+		} 
+	}
+
+	ovpn_port := services.retrieve_ovpn_port()// Detect OpenVPN Port To Whitelist
+	if ovpn_port == 0 {
 		println("[ + ] OpenVPN was not found. Whitlisting the server port....!")
 	}
-
-	ovpn_port := services.retrieve_ovpn_port()
-	if ovpn_port == 0 {
-		println("[ - ] WARNING, No port was found for OpenVPN via its default configuration filepath.... Whitelist the server port via configuration file for pre-caution reasons")
-	} else {
-		println("[ + ] OpenVPN was found... Whitlisting its Port.....!")
-		c.config.protection.whitelisted_ports << ovpn_port
+	c.config.protection.whitelisted_ports << ovpn_port
+	c.config.protection.services << Service{
+		name: "OpenVPN", 
+		port: ovpn_port, 
+		protocol: "TCP",
+		command: "service openvpn restart"
 	}
 
-
-	mut sys_hostnames := c.network.interfaces[c.network_interface]
-	c.config.protection.server_hostname = os.execute("hostname -f").output
-	c.config.protection.server_ipv4 = sys_hostnames[0]
-	c.config.protection.server_ipv6 = sys_hostnames[1]
-
-	// Detect Apache/Nginx and//or any other web server hosted on the network
+	apache_port := apache.retrieve_apache_port()
+	if apache_port == 0 {
+		println("[ X ] Error, Unable to find apache on the system....!")
+		return
+	}
+	c.config.protection.whitelisted_ports << apache_port
+	c.config.protection.services << Service{
+		name: "Apache",
+		port: 80,
+		protocol: "TCP",
+		command: "service apache2 restart"
+	}
 }
 
 pub fn (mut c CyberShield) toggle_ui_mode() 

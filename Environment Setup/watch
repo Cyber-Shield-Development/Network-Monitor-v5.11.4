@@ -1,1 +1,1 @@
-watch -n1 "echo -n "Rules: "; sudo iptables -S | wc -l; echo -n "IPs:"; netstat -tn | wc -l; netstat -tn | sed -r 's/73.88.154.63/-/g' | sed -r 's/1024//g' | sed -r 's/444//g' | sed -r 's/888//g' | sed -r 's/870//g' | sed -r 's/666//g'"
+watch -n1 "echo -n "Rules: "; sudo iptables -S | wc -l; echo -n "IPs:"; netstat -tn | wc -l; netstat -tn | sed -r 's/73.88.154.63/-/g' | sed -r 's/533//g' | sed -r 's/444//g' | sed -r 's/888//g' | sed -r 's/870//g' | sed -r 's/666//g'"

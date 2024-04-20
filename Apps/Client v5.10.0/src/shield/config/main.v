@@ -1,7 +1,7 @@
 module config
 
 import os
-import src.utils
+import src.shield.utils
 
 pub struct Theme 
 {

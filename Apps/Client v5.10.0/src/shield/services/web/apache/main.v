@@ -1,5 +1,7 @@
 module apache
 
+import os
+
 pub const apache_config_filepath = "/etc/apache2/ports.conf"
 
 pub fn scan_for_apache() bool
@@ -23,7 +25,7 @@ pub fn retrieve_apache_port() int
 		return 0
 	}
 
-	for i, line in apache_port_file.split("\n")
+	for line in apache_port_file
 	{
 		if line.starts_with("Listen") {
 			return line.split(" ")[1].trim_space().int()

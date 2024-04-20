@@ -123,6 +123,16 @@ pub fn does_str_contains_chars(data string) bool
 	return false
 }
 
+pub fn does_str_contains_nums(data string) bool 
+{
+	nums := "0123789"
+	for ch in nums {
+		if ch.ascii_str() in nums.split("") { return true }
+	}
+
+	return false
+}
+
 pub fn arr2str(arr []string, delim string) string 
 {
 	mut new := ""
@@ -131,4 +141,22 @@ pub fn arr2str(arr []string, delim string) string
 	}
 
 	return new
+}
+
+pub fn arr2ip(arr []string)string 
+{ return "${arr}".replace("['", "").replace("']", "").replace("', '", ".") }
+
+pub fn rm_ending_chrs(data string) string {
+	mut new := ""
+
+	for ch in data {
+		if ch.is_letter() { break }
+		new += ch.ascii_str()
+	}
+
+	if new.ends_with(".") {
+		return new.substr(0, new.len-1)
+	}
+
+	return ""
 }

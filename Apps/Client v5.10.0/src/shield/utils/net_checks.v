@@ -12,6 +12,7 @@ pub fn is_hostname_valid(hostname string) bool
 /* Validate IPv4 format */
 pub fn validate_ipv4_format(ip string) bool 
 {
+	if does_str_contains_chars(ip) { return false }
 	if ip.contains(":") { return false }
 	args := ip.split(".")
 	if args.len != 4 { return false }
@@ -69,4 +70,118 @@ pub fn validate_url_format(hostname string) bool
 	}
 
 	return true
+}
+
+pub fn retrieve_ipv4(hostname string) string {
+	if check_1(hostname) != "" {
+		return check_1(hostname)
+	} else if check_2(hostname) != "" {
+		return check_2(hostname)
+	} else {
+		return check_for_ipv4(hostname)
+	}
+
+	return ""
+}
+
+pub fn check_1(url string) string {
+	mut args := url.split(".")
+	if args.len < 4 { return "" }
+	
+	for i, _ in args {
+		args[i] = args[i].split("-")[0]
+	}
+
+	for i, arg in args {
+		if arg.int() > 0 && arg.int() < 255 {
+			if args.len-4 < i { break }
+			if validate_ipv4_format(arr2ip(args[i..(i+4)])) {
+				return arr2ip(args[i..(i+4)])
+			}
+		}
+	}
+
+	return ""
+}
+
+pub fn check_2(url string) string {
+	mut args := url.split("-")
+	if args.len < 4 { return "" }
+
+	for i, _ in args {
+		args[i] = args[i].split(".")[0]
+	}
+
+	for i, arg in args {
+		if arg.int() > 0 && arg.int() < 255 {
+			if args.len-4 < i { break }
+			if validate_ipv4_format(arr2ip(args[i..(i+4)])) {
+				return arr2ip(args[i..(i+4)])
+			}
+		}
+	}
+
+	return ""
+}
+
+pub fn check_for_ipv4(ip string) string
+{
+    copy := ip
+	args := copy.split("-")
+	if args.len < 4 { return "" }
+
+	/* Ensure there is numbers in the URL */
+	if !does_str_contains_nums(ip) {
+		println("[ - ] WARNING, Unable to get IPV4 from the URL Formatted Hostname: ${ip}")
+		return ""
+	}
+
+	/* Check 1 :: Parsing 5.5.5.5.lulzsec.ovh */
+	if ip.split(".").len > 3 {
+		if validate_ipv4_format(arr2ip(ip.split(".").clone()[0..4].clone())) {
+			return arr2ip(ip.split(".")[0..4])
+		}
+	}
+
+	/* Check 2 :: Parsing 5-33-154-211.wdw.net */
+	mut check := rm_ending_chrs(arr2ip(args[0..4].clone()))
+	if check.split(".").len == 5 { 
+		check = check.split(".")[0] 
+	}
+	
+	if validate_ipv4_format(check) { 
+		return check 
+	}
+
+	/* 
+	*	Check 3 :: Parsing c-32.14.62.152.monitor.net 
+	*					   ec2-13-58-48-116.us-east-2.compute.amazonaws.com
+	*/
+	mut first_ip_arg := -1
+	for i, arg in args {
+		if arg.int() > 0 && !does_str_contains_chars(arg) {
+			if args[i+1].int() == 0 { continue }
+			first_ip_arg = i 
+			break
+		}
+	}
+
+	if first_ip_arg == -1 { return "" }
+	if args.len >= first_ip_arg+4 { 
+		check = rm_ending_chrs(arr2ip(args[first_ip_arg..(first_ip_arg+4)]))
+		if validate_ipv4_format(check) {
+			return check
+		}
+	}
+	
+	/* Check 3 */
+	if args.len < 5 { return "" }
+	if args[1].int() > 0 && !does_str_contains_chars(args[1]) {
+		check = rm_ending_chrs(arr2ip(args[1..5].clone()))
+
+		if validate_ipv4_format(check) {
+			return check
+		}
+	}
+	return ""
 }

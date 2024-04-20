@@ -1,6 +1,7 @@
 module services
 
 import os
+import src.shield.utils
 
 pub enum Protocol 
 {
@@ -9,7 +10,7 @@ pub enum Protocol
 	tcp 	= 0x022
 }
 
-pub const config_filepath = "/etc/openvpn/server/server.conf"
+pub const config_filepath = "/etc/openvpn/server.conf"
 
 pub fn check_for_ovpn() bool
 { return os.exists(config_filepath) }
@@ -68,5 +69,5 @@ pub fn grab_ovpn_uptime() string
 	service_status := os.execute("service openvpn status").output
 	status_args := service_status.split("\n")[2].split(" ")
 
-	return status_args[status_args.len-2]
+	return utils.arr2str(status_args[4..status_args.len], " ")
 }
