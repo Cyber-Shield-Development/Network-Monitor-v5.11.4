@@ -8,7 +8,6 @@ import src.shield.info.net
 import src.shield.services
 import src.shield.services.web.apache
 import src.shield.utils.term
-import src.shield.info.net.netstat as ns
 
 pub struct Config 
 {
@@ -161,6 +160,16 @@ pub fn (mut c CyberShield) network_protection_scan()
 		port: 80,
 		protocol: "TCP",
 		command: "service apache2 restart"
+	}
+
+	chk, ports := services.scan_ssh_ports()
+	if !chk {
+		println("[ X ] Error, No SSH ports found. THIS IS DANGEROUS!!!! Investigate your SSH config file....!")
+		exit(0)
+	}
+
+	for port in ports {
+		c.config.protection.whitelisted_ports << port
 	}
 }
 

@@ -52,13 +52,9 @@ pub fn network__init(interfacee string) Network
 		exit(0)
 	}
 	n.system_ip = n.interfaces[interfacee][0]
-	get_connection_speed(mut &n)
+	// get_connection_speed(mut &n)
 
 	return n
-}
-
-pub fn get_tcpdump_data(mut n Network) {
-	n.tcpdump_req = td.fetch_tcpdump()
 }
 
 pub fn (mut n Network) get_system_location()
@@ -175,8 +171,8 @@ pub fn fetch_pps_info(mut n Network)
 
 	n.inbound_pps = inbound_pps
 	n.outbound_pps = outbound_pps
-	n.mbits_ps = "${new_rx}".f64() * 8
-	n.mbytes_ps = "${inbound_pps}".f64() * "${n.mbits_ps}".f64() / 1000000
+	n.mbits_ps = (inbound_pps * ("${new_rx}".int() * 8) / 1000000)
+	n.mbytes_ps = "${inbound_pps}".f64() * "${new_rx}".f64() / (1024.0 * 1024.0)
 
 	n.pps = inbound_pps
 	n.fix_output()

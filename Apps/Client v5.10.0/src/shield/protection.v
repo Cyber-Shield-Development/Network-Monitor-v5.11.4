@@ -1,10 +1,8 @@
 module shield
 
 import os
-import time
 
 import src.shield.utils
-import src.shield.info.net
 import src.shield.info.net.netstat as ns
 import src.shield.info.net.tcpdump as td
 
@@ -85,17 +83,8 @@ pub fn protection__init() Protection
 		exit(0)
 	}
 
-	ip_data := utils.get_block_data(protection_file, "[@PROTECTED_IPS]")
-	for ip in ip_data { 
-		if ip.trim_space() != "" { 
-			p.whitelisted_ips << ip.trim_space()
-		}
-	}
-
-	p.personal_rules = utils.get_block_data(protection_file, "[@PERSONAL_RULES]")
-
-	settings := utils.get_block_data(protection_file, "[@SETTINGS]")
-	for line in settings
+	/* Get CyberShield Settings */
+	for line in utils.get_block_data(protection_file, "[@SETTINGS]")
 	{
 		if line.contains("@PERSONAL_RULES") { break }
 		key_info := line.split(":")
@@ -120,10 +109,19 @@ pub fn protection__init() Protection
 		}
 	}
 
-	services_hosted := map[string][]string{}
-	services := utils.get_block_data(protection_file, "[@PROTECTED_SERVICES]")
+	/* Retrieve Personal Rules */
+	p.personal_rules = utils.get_block_data(protection_file, "[@PERSONAL_RULES]")
 
-	for line in services {
+	/* Retrieve Whitelisted IP(s) */
+	ip_data := utils.get_block_data(protection_file, "[@PROTECTED_IPS]")
+	for ip in ip_data { 
+		if ip.trim_space() != "" { 
+			p.whitelisted_ips << ip.trim_space()
+		}
+	}
+
+	/* Retrieve Service Protection via Config */
+	for line in utils.get_block_data(protection_file, "[@PROTECTED_SERVICES]") {
 		if line.trim_space() != "" { 
 			line_arg := line.trim_space().split(":")
 

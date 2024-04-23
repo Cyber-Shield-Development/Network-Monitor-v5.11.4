@@ -2,7 +2,6 @@ import os
 
 import src
 import src.shield
-import src.shield.info.net.netstat as ns 
 
 pub const (
 	start_usage = "Usage: ./shield -i <interface>"

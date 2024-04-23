@@ -2,7 +2,6 @@ module services
 
 import os
 
-import src.shield.info.net
 import src.shield.utils
 
 pub const ssh_config_filepath = "/etc/ssh/sshd_config"

@@ -20,8 +20,8 @@
             "inline": true
           },
           {
-            "name": "Cons Connected",
-            "value": "{CONS_CONNECTED}",
+            "name": "Cons Connected // Req Incoming",
+            "value": "{CONS_CONNECTED}:{INCOMING_REQ}",
             "inline": true
           },
           {
@@ -30,18 +30,23 @@
             "inline": true
           },
           {
-            "name": "Filtering Con Mode",
-            "value": "{FILTERING_CON_MODE}",
+            "name": "Stage 1 Mode",
+            "value": "{STAGE_1_MODE}",
             "inline": true
           },
           {
-            "name": "Drop Con Mode",
-            "value": "{DROP_CON_MODE}",
+            "name": "Stage 2 Mode",
+            "value": "{STAGE_2_MODE}",
             "inline": true
           },
           {
-            "name": "IP(s) Blocked",
-            "value": "{BLOCKED_IPS}",
+            "name": "Stage 3 Mode",
+            "value": "{STAGE_3_MODE}",
+            "inline": true
+          },
+          {
+            "name": "IP(s) Blocked // Req Blocked",
+            "value": "{BLOCKED_1_IPS}:{BLOCKED_2_IPS}",
             "inline": true
           },
           {

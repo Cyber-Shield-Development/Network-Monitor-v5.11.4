@@ -3,11 +3,6 @@ module shield
 import os
 import time
 
-import src.shield.utils.term
-import src.shield.info.net
-import src.shield.info.net.netstat as ns
-import src.shield.info.net.tcpdump as td
-
 pub fn filter_mode(mut c CyberShield, current_tick int)
 {
 	c.config.protection.temporary_whitlist_cons(mut c.network.netstat_cons)
@@ -43,7 +38,6 @@ pub fn advanced_filter_mode(mut c CyberShield, current_tick int)
 	{
 		/* Filter Mode Toggle */
 		if c.config.protection.is_stage_two_n_three_done(c.network.pps) { 
-			println("[ X ] Exiting filter 2.....!")
 			c.toggle_filter2()
 			return 
 		}

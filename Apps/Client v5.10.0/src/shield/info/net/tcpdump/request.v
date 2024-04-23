@@ -36,7 +36,7 @@ pub struct TCPDump
 		req_direction 		ConnectionDirection
 }
 
-pub fn new_req(arr []string, from []string, to []string) TCPDump {
+pub fn new_req(arr []string, from []string, to []string, reqbound ConnectionDirection) TCPDump {
 	mut new := TCPDump{
 		timestamp: arr[0],
 		protocol: arr[1],
@@ -45,7 +45,8 @@ pub fn new_req(arr []string, from []string, to []string) TCPDump {
 		source_port: from[1].int(),
 		destination_ip: to[0],
 		destination_port: to[1].int(),
-		pkt_length: arr[arr.len-1].int()
+		pkt_length: arr[arr.len-1].int(),
+		req_direction: reqbound
 	}
 	
 	new.flags = new.fetch_flags(arr)
@@ -109,53 +110,6 @@ pub fn (mut td TCPDump) hostname_to_ipv4() string
 { 
 	args := os.execute("timeout 2 host -t A ${td.destination_ip}").output 
 	return args[args.len-1].ascii_str()
-}
-
-pub fn fetch_tcpdump() []TCPDump {
-	go os.execute("timeout 2 tcpdump -i ens3 -x -n ip > pcap_data.shield")
-	os.execute("timeout 2 tcpdump -i ens3 -x ip6 >> pcap_data.shield").output
-	
-	time.sleep(30*time.millisecond)
-	tcpdump_data := os.read_lines("pcap_data.shield") or {
-		println("[ - ] WARNING, Unable to read PCAP data file.....!")
-		return []TCPDump{}
-	}
-
-	mut dump_cons := []TCPDump{}
-
-	for line in tcpdump_data {
-		line_args := line.split(" ")
-		if line_args.len < 3 { continue }
-
-		/* Detection for a new connection line */
-		if !line.starts_with(" ") && line_args.len > 10 {
-			_ := line_args[2] // from_raw_addr
-			from_args := line_args[2].split(".")
-
-			_ := line_args[4] // to_raw_addr
-			to_args := line_args[4].split(".")
-
-			from_addr := utils.arr2ip(from_args[0..(from_args.len-1)])
-			mut from_port := from_args[from_args.len-1] 
-
-			to_addr := utils.arr2ip(to_args[0..(to_args.len-1)])
-			mut to_port := to_args[to_args.len-1].replace(":", "")
-			
-			if from_port == "http" { from_port = "80" }
-			if to_port == "http" { to_port = "80" }
-			
-			if from_addr.contains("ovh") { continue }
-			if !utils.is_hostname_valid(from_addr) { continue }
-
-			dump_cons << new_req(line_args, [from_addr, from_port], [to_addr, to_port])
-		} else {
-			if dump_cons.len > 0 {
-				dump_cons[dump_cons.len-1].pkt_data << line.trim_space()
-			}
-		}
-	}
-
-	return dump_cons
 }
 
 pub fn (mut t TCPDump) retrieve_data() string

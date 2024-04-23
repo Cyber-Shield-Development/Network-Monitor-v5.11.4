@@ -2,7 +2,6 @@ module shield
 
 import os
 
-import src.shield.utils.term
 import src.shield.info.net.netstat as ns
 import src.shield.info.net.tcpdump as td
 

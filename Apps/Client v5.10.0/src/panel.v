@@ -3,7 +3,6 @@ module src
 import os
 
 import src.shield
-import src.shield.utils
 import src.shield.utils.term
 
 pub const (
