@@ -23,7 +23,6 @@ pub fn (mut c CyberShield) start_detection()
 
 		/* Retrieve Network Information */
 		go net.fetch_pps_info(mut &c.network)
-		go retrieve_tcpdump_req(mut &c)
 		c.network.netstat_cons = ns.grab_cons()
 
 		/* Append data and render graph */
@@ -64,7 +63,7 @@ pub fn (mut c CyberShield) start_detection()
 			// Create dump file
 			if c.settings.dump_access {
 				c.last_attack_time = c.current_time
-				c.current_dump.dump_file(c.last_attack_time)
+				c.current_dump.dump_file(c.last_attack_time, mut &c)
 			}
 
 			// Send discord notification
@@ -240,10 +239,10 @@ pub fn (mut c CyberShield) toggle_drop()
 *
 */
 
-pub fn retrieve_tcpdump_req(mut c CyberShield)
+pub fn (mut c CyberShield) retrieve_tcpdump_req()
 {
-	go os.execute("timeout 1.1 tcpdump -i ens3 -x -n ip > ipv4_dump.shield")
-	os.execute("timeout 1.1 tcpdump -i ens3 -x -n ip6 >> ipv6_dump.shield")
+	go os.execute("timeout 1.2 tcpdump -i ens3 -x -n ip > ipv4_dump.shield")
+	os.execute("timeout 1.2 tcpdump -i ens3 -x -n ip6 > ipv6_dump.shield")
 
 	ipv4_dump := os.read_lines("ipv4_dump.shield") or { [] }
 	ipv6_dump := os.read_lines("ipv6_dump.shield") or { [] }
@@ -258,7 +257,7 @@ pub fn retrieve_tcpdump_req(mut c CyberShield)
 		line_args := line.split(" ")
 
 		/* Detection for a new connection line */
-		if !line.starts_with(" ") && line_args.len > 10 {
+		if !line.starts_with(" ") && line_args.len > 8 {
 			_ := line_args[2] // from_raw_addr
 			from_args := line_args[2].split(".")
 
@@ -320,10 +319,12 @@ pub fn (mut c CyberShield) post_discord_log(data string) {
 		"{STAGE_1_MODE}": "${c.filter_one_mode}",
 		"{STAGE_2_MODE}": "${c.filter_two_mode}",
 		"{STAGE_3_MODE}": "${c.drop_mode}",
-		"{BLOCKED_1_IPS}": "${c.current_dump.blocked_cons.len}",
-		"{BLOCKED_2_IPS}": "${c.current_dump.blocked_t2_cons.len}",
+		"{BLOCKED_1_IPS}": "${c.current_dump.blocked_cons.len.str()}",
+		"{BLOCKED_2_IPS}": "${c.current_dump.blocked_t2_cons.len.str()}",
 		"{ABUSED_PORT}": "${c.current_dump.abused_ports.len}",
-		"{CURRENT_TIME}": "${c.current_time}",
+		"{START_TIME}": "${c.current_dump.start_time}",
+		"{END TIME}": "${c.current_dump.end_time}",
+		"{CURRENT_TIME}": "${c.current_time}"
 	}
 	utils.send_discord_msg(fields)
 }

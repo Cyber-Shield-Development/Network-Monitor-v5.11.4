@@ -97,6 +97,9 @@ pub fn handle_startup_cmd(mut c shield.CyberShield, args []string)
 			}
 			"-pw" {
 				c.servers.ssh_pw = get_flag_value(args, "-pw")
+			}
+			"-interval" {
+				c.interval = get_flag_value(args, "-interval")
 			} else {}
 		}
 	}

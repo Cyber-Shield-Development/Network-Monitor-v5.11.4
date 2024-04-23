@@ -20,6 +20,11 @@
     iptables -N OPENVPN_TRAFFIC
     iptables -A OPENVPN_TRAFFIC -p udp --dport 5051 -m limit --limit 100/s --limit-burst 200 -j ACCEPT
     iptables -A INPUT -p udp --dport 5051 -j OPENVPN_TRAFFIC
+    sudo iptables -A INPUT -p udp -j DROP
+    sudo iptables -A OUTPUT -p udp -j DROP
+    sudo iptables -A INPUT -m string --string "P��" --algo bm -j DROP
+    sudo iptables -A INPUT -m string --string "P" --algo bm -j DROP
+    
 }
 
 [@PROTECTED_IPS]

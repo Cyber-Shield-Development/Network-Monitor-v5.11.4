@@ -12,12 +12,12 @@ pub const (
 
 pub fn local_cmd_handler(mut c shield.CyberShield) 
 {
+	mut args := []string{} 
+	mut cmd := ""
 	for {
 		new_cmd := os.input("[CyberShield@ControlPanel] ~ $ ")
 
 		if new_cmd.len > 4 {
-			mut args := []string{} 
-			mut cmd := ""
 			if new_cmd.contains(" ") { 
 				args = new_cmd.split(" ")
 				cmd = args[0]
@@ -41,6 +41,9 @@ pub fn local_cmd_handler(mut c shield.CyberShield)
 				"start" {
 					c.servers = shield.start_servers(c.cnc_port, c.ssh_port)
 					go shield.monitor_listener(mut &c)
+				}
+				"restart" {
+					c.restart_attack_filter()
 				}
 				"clear", "cls", "c" {
 					println("${term.clear}")

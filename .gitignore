@@ -1,6 +1,5 @@
 
 *.txt
-\Apps\Client v5.10.0\t.c
-\Apps\Client v5.10.0\t.v
-\Apps\Client v5.10.0\gg.v
+\Apps\Client v5.10.0\*.shield
+\Apps\Client v5.10.0\assets\dumps\*
 *.csd

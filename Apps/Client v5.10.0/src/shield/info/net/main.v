@@ -166,26 +166,11 @@ pub fn fetch_pps_info(mut n Network)
 	new_rx := (os.read_file(rx) or { "" }).int()
 	new_tx := (os.read_file(tx) or { "" }).int()
 
-	inbound_pps := new_rx - old_rx
-	outbound_pps := new_tx - old_tx
+	n.inbound_pps = new_rx - old_rx
+	n.outbound_pps = new_tx - old_tx
 
-	n.inbound_pps = inbound_pps
-	n.outbound_pps = outbound_pps
-	n.mbits_ps = (inbound_pps * ("${new_rx}".int() * 8) / 1000000)
-	n.mbytes_ps = "${inbound_pps}".f64() * "${new_rx}".f64() / (1024.0 * 1024.0)
+	n.mbits_ps = (n.inbound_pps * 8) / (1000 * 1000000)
+	n.mbytes_ps = (n.outbound_pps * 8) / (1000 * 1000000)
 
-	n.pps = inbound_pps
-	n.fix_output()
-}
-
-pub fn (mut n Network) fix_output() {
-	mut args := "${n.mbits_ps}".split(".")
-	if args[1].len > 2 {
-		n.mbits_ps = (args[0] + "." + args[1].substr(0, 2)).f64()
-	}
-
-	args = "${n.mbytes_ps}".split(".")
-	if args[1].len > 2 {
-		n.mbytes_ps = (args[0] + "." + args[1].substr(0, 2)).f64()
-	}
+	n.pps = n.inbound_pps
 }

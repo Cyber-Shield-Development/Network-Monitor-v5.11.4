@@ -44,6 +44,7 @@ pub struct CyberShield
 		ssh_port 					int
 		web_port 					int
 		servers 					Server
+		interval					int = 1
 
 		/* 
 		*	Current and Old Information used for a list of features such as:
@@ -114,9 +115,32 @@ pub fn (mut c CyberShield) set_theme(theme_name string)
 pub fn (mut c CyberShield) network_protection_scan() 
 {
 	/* Whitelist CyberShield ports */
-	if c.cnc_port > 0 { c.config.protection.whitelisted_ports << c.cnc_port }
-	if c.ssh_port > 0 { c.config.protection.whitelisted_ports << c.ssh_port }
-	if c.web_port > 0 { c.config.protection.whitelisted_ports << c.web_port }
+	if c.cnc_port > 0 { 
+		c.config.protection.whitelisted_ports << c.cnc_port 
+		c.config.protection.services << Service {
+			name: "CyberShield_MONITOR_V5_11_1",
+			port: c.cnc_port,
+			protocol: "TCP"
+		}
+	}
+
+	if c.ssh_port > 0 { 
+		c.config.protection.whitelisted_ports << c.ssh_port 
+		c.config.protection.services << Service {
+			name: "CyberShield_SSH_V5_11_1",
+			port: c.ssh_port,
+			protocol: "TCP"
+		}
+	}
+
+	if c.web_port > 0 { 
+		c.config.protection.whitelisted_ports << c.web_port
+		c.config.protection.services << Service {
+			name: "CyberShield_WEB_V5_11_1",
+			port: c.web_port,
+			protocol: "TCP"
+		}
+	}
 
 	/* Whitelist the system's network */
 	mut sys_hostnames := c.network.interfaces[c.network_interface]

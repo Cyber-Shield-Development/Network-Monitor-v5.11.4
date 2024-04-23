@@ -100,7 +100,7 @@ pub fn display_monitor(mut c CyberShield, mut socket net.TcpConn)
 		if c.config.ui.conntable.display {
 
 		}
-		time.sleep(1*time.second)
+		time.sleep(c.interval*time.second)
 		/*
 		*	- Reset Text on Terminal to Update
 		*/

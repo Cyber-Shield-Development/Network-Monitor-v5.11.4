@@ -13,10 +13,12 @@ pub fn monitor_listener(mut c CyberShield)
 			continue
 		}
 
-		mut client_ip := "${client.peer_ip()}".replace("[::ffff:", "").split("]:")[0].trim_space()
-		if c.servers.monitor_listener_toggle && (client_ip !in c.config.protection.whitelisted_ips || (c.config.protection.temporary_whitelist.len > 0 && client_ip !in c.config.protection.temporary_whitelist)) {
+		mut client_ip := "${client.peer_ip()}".replace("Result('", "").replace("[::ffff:", "").split("]:")[0].trim_space()
+
+
+		
+		if c.servers.monitor_listener_toggle && c.under_attack && !c.config.protection.is_con_whitlisted(client_ip) {
 			client.close() or { return }
-			c.servers.monitor.close() or { return }
 			c.servers.toggle_monitor_listener()
 			return
 		}
@@ -35,7 +37,7 @@ pub fn ssh_listener(mut c CyberShield) {
 		}
 
 		mut client_ip := "${ssh_client.peer_ip()}".replace("[::ffff:", "").split("]:")[0].trim_space()
-		if c.servers.monitor_listener_toggle && (client_ip !in c.config.protection.whitelisted_ips || (c.config.protection.temporary_whitelist.len > 0 && client_ip !in c.config.protection.temporary_whitelist)) {
+		if c.servers.monitor_listener_toggle && c.under_attack && !c.config.protection.is_con_whitlisted(client_ip) {
 			ssh_client.close() or { return }
 			c.servers.ssh.close() or { return }
 			return

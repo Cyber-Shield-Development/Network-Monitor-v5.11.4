@@ -26,5 +26,4 @@ pub fn set_term_size(mut c net.TcpConn, row int, col int)
 {
 	c.write_string("\033[?25l") or { 0 }
 	c.write_string("\033[8;${row};${col}t") or { 0 }
-	time.sleep(80*time.millisecond)
 }

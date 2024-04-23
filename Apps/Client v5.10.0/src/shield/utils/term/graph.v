@@ -86,7 +86,7 @@ pub fn (mut g Graph) generate_bar(num int) int
     for graph_row_data in g.graph_data_rows {
         time.sleep(1*time.second)
 
-        if num == graph_row_data && row_idx == 0 {
+        if row_idx == 0 && num < g.grab_next_map_field(graph_row_data) {
             return 1
         }
 

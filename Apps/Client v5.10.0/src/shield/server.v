@@ -19,7 +19,7 @@ pub struct Server
 
 pub fn start_servers(m int, s int) Server
 {
-	mut svr := Server{}
+	mut svr := Server{monitor_listener_toggle: true}
 
 	svr.monitor = net.listen_tcp(.ip6, ":${m}") or {
 		println("[ X ] Error, Unable to start Monitor server.....!")

@@ -18,7 +18,7 @@ pub fn place_text(mut client net.TcpConn, pos []string, color []string, data str
 	create_output += "${data}${c_default}"
 
 	client.write_string(create_output) or { 0 }
-	time.sleep(80*time.millisecond)
+	time.sleep(10*time.millisecond)
 }
 
 pub fn list_text(mut c net.TcpConn, p []string, t string) {

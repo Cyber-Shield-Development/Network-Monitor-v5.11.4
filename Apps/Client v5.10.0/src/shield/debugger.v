@@ -4,6 +4,15 @@
 *
 *	- This custom built-in debugger is to enable certain output protection that
 *	  the application does behind the scenes and enable TEST(s)
+*
+*	[ USE EXAMPLE ]
+*
+*	fn main() {
+*		mut debugger := shield.start_debugging(false, true, false, "Lulz")
+*		test := ""
+*	
+*		debugger.append_debug_test("null_variable", "t.v", "main()", "", false, false, [], false, false)
+*	}
 */
 module shield
 

@@ -77,7 +77,11 @@ pub const protection_filepath = "assets/settings.shield"
 
 pub fn protection__init() Protection 
 {
-	mut p := Protection{ server_hostname: os.execute("hostname -f").output, services: []Service{} }
+	mut p := Protection{ 
+		server_hostname: os.execute("hostname -f").output, 
+		services: []Service{},
+		temporary_whitelist: []string{}
+	}
 	protection_file := os.read_lines(protection_filepath) or {
 		println("[ X ] Error, Unable to read protection config file\r\n\t=> Path: '${protection_filepath}'")
 		exit(0)
@@ -220,7 +224,7 @@ pub fn (mut p Protection) is_stage_two_n_three_done(pps int) bool
 
 pub fn (mut p Protection) detect_stage_two(pps int, con_count int, unique_con_count int, blocked_con_count int) bool
 {
-	if pps > p.max_pps && (unique_con_count == 0 || unique_con_count > p.max_con_per_port) { 
+	if pps > p.max_pps && (unique_con_count == 0 || unique_con_count > (p.whitelisted_ips.len + 3)) { 
 		return true
 	}
 

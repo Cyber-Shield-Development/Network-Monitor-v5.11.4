@@ -36,6 +36,7 @@ pub fn advanced_filter_mode(mut c CyberShield, current_tick int)
 {
 	for 
 	{
+		c.retrieve_tcpdump_req()
 		/* Filter Mode Toggle */
 		if c.config.protection.is_stage_two_n_three_done(c.network.pps) { 
 			c.toggle_filter2()
@@ -55,12 +56,12 @@ pub fn advanced_filter_mode(mut c CyberShield, current_tick int)
 			/* Block block block */
 			c.current_dump.adv_block_con(mut con)
 			if !c.config.protection.is_port_serviced(con.source_port) {
+				println("[ + ] Dropping port ${con.source_port}")
 				os.execute("fuser -k ${con.source_port}/tcp; service ssh restart > /dev/null")
 			}
 		}
 		os.execute("sudo iptables-save; sudo ip6tables-save")
 		println("[ + ] (ADVANCED_FILTER;${current_tick}:${c.tick}) ${c.current_dump.blocked_t2_cons.len} Connections blocked. Checking if attack has stopped or block more connections.....!")
-		time.sleep(1*time.second)
 	}
 }
 
@@ -96,6 +97,6 @@ pub fn drop_mode(mut c CyberShield, current_tick int)
 			}
 		}
 		println("[ X ] (FILTER;${current_tick}:${c.tick}) ${c.current_dump.dropped_cons.len} Connection were blocked. Checking if attack has stopped or block more connections.....!")
-		time.sleep(2*time.second)
+		time.sleep(1*time.second)
 	}
 }
