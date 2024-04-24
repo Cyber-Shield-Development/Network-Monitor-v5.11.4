@@ -65,11 +65,6 @@ pub fn (mut c CyberShield) start_detection()
 				c.last_attack_time = c.current_time
 				c.current_dump.dump_file(c.last_attack_time, mut &c)
 			}
-
-			// Send discord notification
-			if c.settings.notification_access {
-				c.post_discord_log("The current attack has end......!")
-			}
 			
 			c.restart_attack_filter()
 		}
@@ -161,7 +156,7 @@ pub fn (mut c CyberShield) toggle_filter1()
 		go filter_mode(mut &c, c.tick)
 
 		if c.current_dump == Dump{} { 
-			if c.settings.notification_access { c.post_discord_log("An attack has started......!") }
+			if c.settings.notification_access { c.post_discord_log("An attack has started......!", "n/a") }
 			c.current_dump = start_new_dump(c.network_interface, c.network.system_ip, c.network.location, c.network.isp, c.current_time)
 		}
 	} 
@@ -194,7 +189,7 @@ pub fn (mut c CyberShield) toggle_filter2()
 		go advanced_filter_mode(mut &c, c.tick)
 
 		if c.current_dump == Dump{} { 
-			if c.settings.notification_access { c.post_discord_log("An attack has started......!") }
+			if c.settings.notification_access { c.post_discord_log("An attack has started......!", "n/a") }
 			c.current_dump = start_new_dump(c.network_interface, c.network.system_ip, c.network.location, c.network.isp, c.current_time)
 		}
 	} 
@@ -227,7 +222,7 @@ pub fn (mut c CyberShield) toggle_drop()
 		go drop_mode(mut &c, c.tick)
 
 		if c.current_dump == Dump{} { 
-			if c.settings.notification_access { c.post_discord_log("An attack has started......!") }
+			if c.settings.notification_access { c.post_discord_log("An attack has started......!", "n/a") }
 			c.current_dump = start_new_dump(c.network_interface, c.network.system_ip, c.network.location, c.network.isp, c.current_time)
 		}
 	} 
@@ -256,8 +251,11 @@ pub fn (mut c CyberShield) retrieve_tcpdump_req()
 		mut reqbound := td.ConnectionDirection.inbound
 		line_args := line.split(" ")
 
+		/* Skip useless TCPDump lines */
+		if line_args.len < 8 || line.starts_with("tcpdump") || line.starts_with("listening") { continue }
+
 		/* Detection for a new connection line */
-		if !line.starts_with(" ") && line_args.len > 8 {
+		if !line.starts_with(" ") && line_args[1] == "IP" {
 			_ := line_args[2] // from_raw_addr
 			from_args := line_args[2].split(".")
 
@@ -273,17 +271,28 @@ pub fn (mut c CyberShield) retrieve_tcpdump_req()
 			if from_port == "http" { from_port = "80" }
 			if to_port == "http" { to_port = "80" }
 			
-
+			/* Validate hostname && set request direction */
 			if !utils.is_hostname_valid(from_addr) { continue }
-			if from_addr == c.config.protection.server_ipv4 || from_addr == c.config.protection.server_ipv6 || from_addr == c.config.protection.server_hostname {
+			if from_addr in [
+				c.config.protection.server_ipv4, 
+				c.config.protection.server_ipv6, 
+				c.config.protection.server_hostname
+			] {
 				reqbound = td.ConnectionDirection.outbound
 			}
 
+			/* Create a new struct and append to list of request(s) */
 			c.network.tcpdump_req << td.new_req(line_args, [from_addr, from_port], [to_addr, to_port], reqbound)
-		} else {
-			if c.network.tcpdump_req.len > 0 {
-				c.network.tcpdump_req[c.network.tcpdump_req.len-1].pkt_data << line.trim_space()
+			continue
+		}
+		
+		if c.network.tcpdump_req.len > 0 {
+			ctime := "${time.now()}".replace("-", "/").replace(" ", "-")
+			if c.network.tcpdump_req[c.network.tcpdump_req.len-1].pkt_data["${ctime}_DATA"] != "" {
+				c.network.tcpdump_req[c.network.tcpdump_req.len-1].pkt_data["${ctime}_DATA"] += "${line.trim_space()}\n"
+				continue
 			}
+				c.network.tcpdump_req[c.network.tcpdump_req.len-1].pkt_data["${ctime}_DATA"] = line.trim_space()
 		}
 	}
 }
@@ -306,9 +315,9 @@ pub fn (mut c CyberShield) retrieve_unique_cons() []ns.NetstatCon
 	return cons
 }
 
-pub fn (mut c CyberShield) post_discord_log(data string) {
+pub fn (mut c CyberShield) post_discord_log(data string, dump_filename string) {
 	/* Send attack data to discord */
-	fields := {
+	mut fields := {
 		"{CONTENT_DATA}": "${data}",
 		"{IP_ADDRESS}": "${c.config.protection.server_ipv4}",
 		"{LOCATION}": "Canada",
@@ -323,8 +332,13 @@ pub fn (mut c CyberShield) post_discord_log(data string) {
 		"{BLOCKED_2_IPS}": "${c.current_dump.blocked_t2_cons.len.str()}",
 		"{ABUSED_PORT}": "${c.current_dump.abused_ports.len}",
 		"{START_TIME}": "${c.current_dump.start_time}",
-		"{END TIME}": "${c.current_dump.end_time}",
+		"{END_TIME}": "${c.current_dump.end_time}",
 		"{CURRENT_TIME}": "${c.current_time}"
 	}
+
+	if dump_filename != "" {
+		fields["{LINK_TO_DUMP}"] = "http://${c.config.protection.server_ipv4}/${dump_filename}"
+	}
+
 	utils.send_discord_msg(fields)
 }

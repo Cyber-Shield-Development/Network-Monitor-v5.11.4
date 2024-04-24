@@ -1,0 +1,34 @@
+           ╦  ╦
+ ╔═╗╦ ╦╔╗ ╔═╗╦═╗                ╔═══════════════════[ Settings & Detection Info ]══════════════════╗ ╔═══════════[ Device & Connection Info ]═══════════╗   
+ ║  ╚╦╝╠╩╗║╣ ╠╦╝╗╦ ╦╦╔═╗╦  ╔╦╗    → Interface:                     → Server Status:                   → OS:                         → Upload:                                
+ ╚═╝ ╩ ╚═╝╚═╝╩╚╗╗╠═╣║║╣ ║   ║║    → Max PPS:                       → Under Attack:                    → OS Version:                 → Download:          
+           ╚╗╔╝═╝╩ ╩╩╚═╝╩═╝═╩╝    → Max Connections:               → Filter System Enabled:           → Kernel:                     → PPS:               
+            ╚╝                    → Max Con Per Port:              → Drop System Enabled:             → Shell:                      → Mbit(s) Per Sec:   
+                                  → Auto clear new rule(s): false  → Drop 2 System Enabled: false     → IPv4:                       → Mbyte(s) Per Sec:  
+                                  → Auto add my rule(s):           → Drop System Enabled:             → IPv6:                       → Connections:       
+  @version: 5.10.3                → Personal Rule(s):              → Blocked Connections:             → OpenVPN:                                   
+  @author: Algorithm              → Protected IP(s):               → Abused Port(s):                  → Apache: 
+  @github: @AdvancedAlgorithm     → Protected Port(s):             → Log Count:                       → ms Response:              
+
+                                                                                           [ Packets Per Second ]
+ ╔═══[ CPU & Ram Usage ]═══╗                       80K ║
+  CPU 1:                                               ║
+  [-----------------------]                        60K ║
+                                                       ║
+  Ram:                                             30K ║
+  [-----------------------]                            ║
+                                                   15K ║
+                                                       ║
+                                                    5K ║
+                                                       ╚═════════════════════════════════════════════════════════════════════════════════════════════════════        
+                                                  [ MBit(s) Per Second ]                                  [ MByte(s) Per Second ]                  
+                            20 MBPS ║                                                   20 MBPS ║
+                                    ║                                                           ║
+                            15 MBPS ║                                                   15 MBPS ║
+                                    ║                                                           ║
+                            10 MBPS ║                                                   10 MBPS ║
+                                    ║                                                           ║
+                             5 MBPS ║                                                    5 MBPS ║
+                                    ║                                                           ║
+                             1 MBPS ║                                                    1 MBPS ║
+                                    ╚══════════════════════════════════════════════════         ╚══════════════════════════════════════════════════

@@ -22,7 +22,7 @@ pub fn filter_mode(mut c CyberShield, current_tick int)
 			/* Skip if connection has already been blocked */
 			if c.current_dump.is_ip_blocked(con.external_ip) { continue }
 			
-			c.current_dump.block_con(mut con)
+			c.current_dump.block_con(mut con, mut &c.config.protection)
 		}
 		
 		os.execute("sudo iptables-save; sudo ip6tables-save")
@@ -54,11 +54,7 @@ pub fn advanced_filter_mode(mut c CyberShield, current_tick int)
 			if c.current_dump.is_ip_blocked(con.destination_ip) { continue }
 
 			/* Block block block */
-			c.current_dump.adv_block_con(mut con)
-			if !c.config.protection.is_port_serviced(con.source_port) {
-				println("[ + ] Dropping port ${con.source_port}")
-				os.execute("fuser -k ${con.source_port}/tcp; service ssh restart > /dev/null")
-			}
+			c.current_dump.adv_block_con(mut con, mut &c.config.protection)
 		}
 		os.execute("sudo iptables-save; sudo ip6tables-save")
 		println("[ + ] (ADVANCED_FILTER;${current_tick}:${c.tick}) ${c.current_dump.blocked_t2_cons.len} Connections blocked. Checking if attack has stopped or block more connections.....!")

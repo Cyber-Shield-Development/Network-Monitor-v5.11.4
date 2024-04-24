@@ -91,28 +91,50 @@ pub fn (mut d Dump) is_con_dropped(ip string) bool
 	return false
 }
 
-pub fn (mut d Dump) block_con(mut con ns.NetstatCon)
+pub fn (mut d Dump) block_con(mut con ns.NetstatCon, mut p Protection)
 {
 	d.blocked_cons << con 
 	d.blocked_ips << con.external_ip
 	
+	/* Block IP */
 	if con.ip_t == ns.IP_T.ipv4 {
 		os.execute("sudo iptables -A INPUT -s ${con.external_ip} -p tcp -j DROP; sudo iptables -A OUTPUT -s ${con.external_ip} -p tcp -j DROP")
 	} else if con.ip_t == ns.IP_T.ipv6 {
 		os.execute("sudo ip6tables -A INPUT -s ${con.external_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.external_ip} -j DROP")
 	}
+
+	/* Drop Port If not used for hosting */
+	if !p.is_port_serviced(con.internal_port) {
+		os.execute("fuser -k ${con.internal_port}/tcp; service ssh restart > /dev/null")
+	}
 }
 
-pub fn (mut d Dump) adv_block_con(mut con td.TCPDump)
+pub fn (mut d Dump) adv_block_con(mut con td.TCPDump, mut p Protection)
 {
 	d.blocked_t2_cons << con
 	d.blocked_ips << con.destination_ip
 	
-	if con.hostname_t == td.Protocol_T.ipv4 || con.hostname_t == .ipv4  {
-		os.execute("sudo iptables -A INPUT -s ${con.destination_ip} -p tcp -j DROP; sudo iptables -A OUTPUT -s ${con.destination_ip} -p tcp -j DROP")
-	} else if con.hostname_t == td.Protocol_T.ipv6 || con.hostname_t == .ipv6 {
-		os.execute("sudo ip6tables -A INPUT -s ${con.destination_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.destination_ip} -j DROP")
-	}	
+	/* Block IP */
+	if con.req_direction == td.ConnectionDirection.outbound {
+		// SERVER IS REPLYING TO THE ATTACK (OUT-GOING DATA)
+		if con.hostname_t == td.Protocol_T.ipv4  {
+			os.execute("sudo iptables -A INPUT -s ${con.destination_ip} -p tcp -j DROP; sudo iptables -A OUTPUT -s ${con.destination_ip} -p tcp -j DROP")
+		} else if con.hostname_t == td.Protocol_T.ipv6 {
+			os.execute("sudo ip6tables -A INPUT -s ${con.destination_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.destination_ip} -j DROP")
+		}
+	} else if con.req_direction == td.ConnectionDirection.inbound {
+		// INCOMING REQ/ATTACK (IN-COMING DATA)
+		if con.hostname_t == td.Protocol_T.ipv4  {
+			os.execute("sudo iptables -A INPUT -s ${con.source_ip} -p tcp -j DROP; sudo iptables -A OUTPUT -s ${con.destination_ip} -p tcp -j DROP")
+		} else if con.hostname_t == td.Protocol_T.ipv6 {
+			os.execute("sudo ip6tables -A INPUT -s ${con.source_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.destination_ip} -j DROP")
+		}
+	}
+
+	/* Drop Port If not used for hosting */
+	if !p.is_port_serviced(con.source_port) {
+		os.execute("fuser -k ${con.source_port}/tcp; service ssh restart > /dev/null")
+	}
 }
 
 pub fn (mut d Dump) dump_file(current_datetime string, mut c CyberShield)
@@ -120,6 +142,11 @@ pub fn (mut d Dump) dump_file(current_datetime string, mut c CyberShield)
 	d.end_time = current_datetime
 	file_name := current_datetime.replace("/", "_").replace(":", "_")
 	mut dump_data := "@CyberShield Dump File ${d.start_time} - ${d.end_time}\r\n[@NETWORK_INFO]\r\n{\r\n"
+
+	// Send discord notification
+	if c.settings.notification_access {
+		c.post_discord_log("The current attack has end......!", "${file_name}.shield")
+	}
 
 	network_info := {
 		"\tCon/s": "${c.network.netstat_cons.len}",
@@ -142,15 +169,18 @@ pub fn (mut d Dump) dump_file(current_datetime string, mut c CyberShield)
 
 	for label, value in attack_info { dump_data += "\t${label}: ${value}\r\n" }
 
-	dump_data += "}\r\n\r\n[@REQUEST_PKT_DATA]\r\n{\r\n"
+	dump_data += "}\r\n\r\n[@CONS_CAPTURED]\r\n{\r\n"
+	for mut con in d.blocked_cons {
+		dump_data += "${con.to_str()}\r\n"
+	}
 
+	dump_data += "\r\n}\r\n\r\n[@REQUEST_PKT_DATA]\r\n{\r\n"
 	for mut req in d.blocked_t2_cons {
-		dump_data += "\t${req.to_str()}\r\n"
+		dump_data += "\t${req.to_str().replace('\n', '\n\t')}\r\n"
 	}
 	dump_data += "}\r\n"
 
 	os.write_file("assets/dumps/${file_name}.shield", "${dump_data}") or { return }
-	os.write_file("assets/dumps/${file_name}_debug.shield", "${c}") or { return }
-	os.execute("cp assets/dumps/${file_name}.shield /var/www/html; service apache2 restart")
+	os.execute("cp assets/dumps/${file_name}.shield /var/www/html;  sed -r 's/\n/<br />/g' /var/www/html/${file_name}.shield; service apache2 restart")
 	println("[ + ] (${c.current_time}) Attack dump file created.....!\r\n\t=> Filepath: 'assets/dumps/${file_name}.shield'...!")
 }

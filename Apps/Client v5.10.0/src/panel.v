@@ -17,6 +17,7 @@ pub fn local_cmd_handler(mut c shield.CyberShield)
 	for {
 		new_cmd := os.input("[CyberShield@ControlPanel] ~ $ ")
 
+		cmd = new_cmd
 		if new_cmd.len > 4 {
 			if new_cmd.contains(" ") { 
 				args = new_cmd.split(" ")
@@ -39,11 +40,20 @@ pub fn local_cmd_handler(mut c shield.CyberShield)
 					println("${c.config.protection}")
 				}
 				"start" {
-					c.servers = shield.start_servers(c.cnc_port, c.ssh_port)
+					// c.servers = shield.start_servers(c.cnc_port, c.owner_cnc_port, c.ssh_port)
 					go shield.monitor_listener(mut &c)
+					go shield.owner_monitor_listener(mut &c)
+					println("[ + ] Monitor listeners started....!")
 				}
-				"restart" {
+				"restart_dump" {
 					c.restart_attack_filter()
+				}
+				"change_port" {
+					if args.len != 2 { continue }
+					c.servers.monitorp = args[1].int()
+					c.servers.toggle_monitor_listener() // Turn off
+					c.servers.toggle_monitor_listener() // Turn on
+					println("[ + ] Cyber Shield port changed and restarted.....!")
 				}
 				"clear", "cls", "c" {
 					println("${term.clear}")

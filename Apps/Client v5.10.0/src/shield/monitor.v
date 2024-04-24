@@ -115,7 +115,7 @@ pub fn display_monitor(mut c CyberShield, mut socket net.TcpConn)
 			term.place_text(mut socket, c.config.ui.connection.blocked_con_count, c.config.ui.connection.value_c, "          ") // PPS
 			term.place_text(mut socket, c.config.ui.connection.blocked_2_con_count, c.config.ui.connection.value_c, "          ") // PPS
 			term.place_text(mut socket, c.config.ui.connection.dropped_con_count, c.config.ui.connection.value_c, "          ") // PPS
-				term.place_text(mut socket, c.config.ui.connection.online_status, c.config.ui.connection.value_c, "          ") // PPS
+			term.place_text(mut socket, c.config.ui.connection.online_status, c.config.ui.connection.value_c, "             ") // PPS
 		}
 	}
 }

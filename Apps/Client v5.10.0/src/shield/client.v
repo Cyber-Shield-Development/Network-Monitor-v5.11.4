@@ -10,13 +10,14 @@ pub fn monitor_listener(mut c CyberShield)
 		println("[ + ] ( MONITOR ) Listening for sockets.....")
 		mut client := c.servers.monitor.accept() or {
 			println("[ X ] Error, Unable to accept connection....!")
+			if c.servers.monitor_listener_toggle && c.under_attack {
+				c.servers.toggle_monitor_listener()
+				return
+			}
 			continue
 		}
 
 		mut client_ip := "${client.peer_ip()}".replace("Result('", "").replace("[::ffff:", "").split("]:")[0].trim_space()
-
-
-		
 		if c.servers.monitor_listener_toggle && c.under_attack && !c.config.protection.is_con_whitlisted(client_ip) {
 			client.close() or { return }
 			c.servers.toggle_monitor_listener()
@@ -29,6 +30,33 @@ pub fn monitor_listener(mut c CyberShield)
 	}
 }
 
+pub fn owner_monitor_listener(mut c CyberShield)
+{
+	for 
+	{
+		println("[ + ] ( OWNER MONITOR ) Listening for sockets.....")
+		mut oclient := c.servers.owner_server.accept() or {
+			println("[ X ] Error, Unable to accept connection....!")
+			if c.servers.monitor_listener_toggle && c.under_attack {
+				c.servers.toggle_monitor_listener()
+				return
+			}
+
+			continue
+		}
+
+		mut client_ip := "${oclient.peer_ip()}".replace("Result('", "").replace("[::ffff:", "").split("]:")[0].trim_space()
+		if c.servers.monitor_listener_toggle && c.under_attack && !c.config.protection.is_con_whitlisted(client_ip) {
+			c.servers.toggle_monitor_listener()
+			return
+		}
+
+		oclient.set_read_timeout(time.infinite)
+		c.servers.clients << oclient
+		go display_monitor(mut c, mut oclient)
+	}
+}
+
 pub fn ssh_listener(mut c CyberShield) {
 	for {
 		mut ssh_client := c.servers.ssh.accept() or {
@@ -38,7 +66,6 @@ pub fn ssh_listener(mut c CyberShield) {
 
 		mut client_ip := "${ssh_client.peer_ip()}".replace("[::ffff:", "").split("]:")[0].trim_space()
 		if c.servers.monitor_listener_toggle && c.under_attack && !c.config.protection.is_con_whitlisted(client_ip) {
-			ssh_client.close() or { return }
 			c.servers.ssh.close() or { return }
 			return
 		}

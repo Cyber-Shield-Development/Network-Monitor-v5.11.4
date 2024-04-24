@@ -4,7 +4,7 @@ import os
 import net.http
 
 pub const (
-	discord_api_hook = "https://discordapp.com/api/webhooks/1221921273500663899/AynGoAqpus3BWUrdnIzH4iFAw_V0H83i-o3Rkno3g-0sSLpOPmaN08SEDLoO_Fcf_-Qw"
+	discord_api_hook = "https://discord.com/api/webhooks/1232453267032637531/TwnK3Z9fTS3xxnhS9GFa25zl0a0kRzwOBJocs2PtRqtAdllc2D0I0vfLyP5EW8FFSSpc"
 )
 
 pub fn send_discord_msg(fields map[string]string) 

@@ -169,8 +169,8 @@ pub fn fetch_pps_info(mut n Network)
 	n.inbound_pps = new_rx - old_rx
 	n.outbound_pps = new_tx - old_tx
 
-	n.mbits_ps = (n.inbound_pps * 8) / (1000 * 1000000)
-	n.mbytes_ps = (n.outbound_pps * 8) / (1000 * 1000000)
+	n.mbits_ps = (n.inbound_pps * 8) / 1000000
+	n.mbytes_ps = n.inbound_pps / (1024 * 1024)
 
 	n.pps = n.inbound_pps
 }

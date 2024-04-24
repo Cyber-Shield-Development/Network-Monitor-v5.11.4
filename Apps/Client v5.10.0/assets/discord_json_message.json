@@ -20,7 +20,7 @@
             "inline": true
           },
           {
-            "name": "Cons Connected // Req Incoming",
+            "name": "Cons Captured // Req Incoming",
             "value": "{CONS_CONNECTED}:{INCOMING_REQ}",
             "inline": true
           },
@@ -55,8 +55,23 @@
             "inline": true
           },
           {
+            "name": "Attack Start Timestamp",
+            "value": "{START_TIME}",
+            "inline": true
+          },
+          {
+            "name": "Attack End Timestamp",
+            "value": "{END_TIME}",
+            "inline": true
+          },
+          {
             "name": "Current Time",
             "value": "{CURRENT_TIME}",
+            "inline": true
+          },
+          {
+            "name": "Dump File",
+            "value": "{LINK_TO_DUMP}",
             "inline": true
           }
         ],

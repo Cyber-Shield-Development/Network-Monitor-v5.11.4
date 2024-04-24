@@ -82,41 +82,21 @@ pub fn (mut g Graph) append_to_graph(data int)!
 pub fn (mut g Graph) generate_bar(num int) int
 {
     // USING THE NEW MAP ALGORITHM IN THE ABOVE COMMENT 
-    mut row_idx := 0
-    for graph_row_data in g.graph_data_rows {
+    mut row_idx := 1
+    for i, graph_row_data in g.graph_data_rows {
         time.sleep(1*time.second)
 
-        if row_idx == 0 && num < g.grab_next_map_field(graph_row_data) {
-            return 1
-        }
-
-        if num == graph_row_data {
+        if num == graph_row_data || (i == 0 && num < graph_row_data) {
             return row_idx
         }
 
-        if row_idx == g.graph_data_rows.len-1 && num > graph_row_data {
-            return row_idx
-        } else {
-            if num > graph_row_data && num < g.grab_next_map_field(graph_row_data) {
-                return row_idx
-            }
+        if num > graph_row_data && num < g.grab_next_map_field(graph_row_data) {
+            return row_idx+1
         }
         row_idx++
     }
     
-    return 0
-
-    // mut bar := 0
-    // if g.num == 5000 { bar = 1 }
-	// else if g.num > 5000 && g.num < 15000 { bar = 2 }
-    // else if g.num == 15000 { bar = 3 }
-	// else if g.num > 15000 && g.num < 30000 { bar = 4 }
-    // else if g.num == 30000 { bar = 5 }
-	// else if g.num > 30000 && g.num < 60000 { bar = 6 }
-    // else if g.num == 60000 { bar = 7 }
-    // else if g.num > 60000 && g.num < 80000 { bar = 8 }
-    // else if g.num == 80000 { bar = 9 }
-    // return bar
+    return 1
 }
 
 pub fn (mut g Graph) grab_next_map_field(find_key int) int

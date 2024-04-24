@@ -70,6 +70,10 @@ pub fn new_con(arr []string) NetstatCon
 	return new
 }
 
+pub fn (mut n NetstatCon) to_str() string {
+	return "\t[${n.protocol}:${n.ip_t}] ${n.state} ${n.external_ip}:${n.external_port} > ${n.internal_ip}:${n.internal_port} Recv: ${n.recv_bytes} | Sent: ${n.sent_bytes}"
+}
+
 pub fn trim_elements(arr []string) []string
 {
 	mut new := []string{}

