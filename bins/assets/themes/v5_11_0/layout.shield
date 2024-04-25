@@ -1,4 +1,4 @@
-  ╔═════[ Settings & Detection Info ]═════╗ ╔═══[ CPU & Ram Usage ]═══╗ ╔══════════════════[ Device & Connection Info ]════════════════════╗
+  {LIGHTMAGENTA}╔═════[ {DEFAULT}Settings & Detection Info {LIGHTMAGENTA}]═════╗ ╔═══[{DEFAULT} CPU & Ram Usage {LIGHTMAGENTA}]═══╗ ╔══════════════════[{DEFAULT} Device & Connection Info {LIGHTMAGENTA}]════════════════════╗{DEFAULT}
     → Interface:                              CPU 1:                     → Tick:                      → ms Response:        
     → Max PPS:                               [-----------------------]   → OS:                        → Pkt/s Per Sec:      
     → Max Connections:                                                   → OS Version:                → Mbit(s) Per Sec:    

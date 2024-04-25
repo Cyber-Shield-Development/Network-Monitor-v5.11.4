@@ -1,0 +1,90 @@
+{
+    "username": "[ Cyber Shield ]",
+    "avatar_url": "https://images-ext-1.discordapp.net/external/nFMh_rTcO6cd55COqD2bpf8sv09NP0mdoMRQVxYhO38/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1212184101822402560/36a08ca8a033990691eda761e3793664.png",
+    "content": "",
+    "embeds": [
+      {
+        "author": {
+          "name": "Jeffery / Algorithm",
+          "url": "https://images-ext-1.discordapp.net/external/nFMh_rTcO6cd55COqD2bpf8sv09NP0mdoMRQVxYhO38/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1212184101822402560/36a08ca8a033990691eda761e3793664.png",
+          "icon_url": "https://images-ext-1.discordapp.net/external/nFMh_rTcO6cd55COqD2bpf8sv09NP0mdoMRQVxYhO38/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1212184101822402560/36a08ca8a033990691eda761e3793664.png"
+        },
+        "title": "[ Cyber Shield's Dump Log ]",
+        "url": "https://images-ext-1.discordapp.net/external/nFMh_rTcO6cd55COqD2bpf8sv09NP0mdoMRQVxYhO38/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1212184101822402560/36a08ca8a033990691eda761e3793664.png",
+        "description": "{CONTENT_DATA}",
+        "color": 15258703,
+        "fields": [
+          {
+            "name": "Server Info",
+            "value": "{IP_ADDRESS} | {LOCATION} | {PROVIDER}",
+            "inline": true
+          },
+          {
+            "name": "Cons Captured // Req Incoming",
+            "value": "{CONS_CONNECTED}:{INCOMING_REQ}",
+            "inline": true
+          },
+          {
+            "name": "Under Attack",
+            "value": "{UNDER_ATTACK}",
+            "inline": true
+          },
+          {
+            "name": "Stage 1 Mode",
+            "value": "{STAGE_1_MODE}",
+            "inline": true
+          },
+          {
+            "name": "Stage 2 Mode",
+            "value": "{STAGE_2_MODE}",
+            "inline": true
+          },
+          {
+            "name": "Stage 3 Mode",
+            "value": "{STAGE_3_MODE}",
+            "inline": true
+          },
+          {
+            "name": "IP(s) Blocked // Req Blocked",
+            "value": "{BLOCKED_1_IPS}:{BLOCKED_2_IPS}",
+            "inline": true
+          },
+          {
+            "name": "Port(s) Abused",
+            "value": "{ABUSED_PORT}",
+            "inline": true
+          },
+          {
+            "name": "Attack Start Timestamp",
+            "value": "{START_TIME}",
+            "inline": true
+          },
+          {
+            "name": "Attack End Timestamp",
+            "value": "{END_TIME}",
+            "inline": true
+          },
+          {
+            "name": "Current Time",
+            "value": "{CURRENT_TIME}",
+            "inline": true
+          },
+          {
+            "name": "Dump File",
+            "value": "{LINK_TO_DUMP}",
+            "inline": true
+          }
+        ],
+        "thumbnail": {
+          "url": "https://images-ext-1.discordapp.net/external/nFMh_rTcO6cd55COqD2bpf8sv09NP0mdoMRQVxYhO38/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1212184101822402560/36a08ca8a033990691eda761e3793664.png"
+        },
+        "image": {
+          "url": "https://images-ext-1.discordapp.net/external/nFMh_rTcO6cd55COqD2bpf8sv09NP0mdoMRQVxYhO38/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1212184101822402560/36a08ca8a033990691eda761e3793664.png"
+        },
+        "footer": {
+          "text": "https://github.com/AdvancedAlgorithm",
+          "icon_url": "https://images-ext-1.discordapp.net/external/nFMh_rTcO6cd55COqD2bpf8sv09NP0mdoMRQVxYhO38/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1212184101822402560/36a08ca8a033990691eda761e3793664.png"
+        }
+      }
+    ]
+  }

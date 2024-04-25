@@ -22,13 +22,17 @@ pub struct Filter
 
 pub struct Service {
 	pub mut:
-		name		string
-		port 		int 
-		protocol 	string // Protocol its on (Avoid dropping port which causes socket app(s) to crash)
+		name			string
+		port 			int 
+		protocol 		string // Protocol its on (Avoid dropping port which causes socket app(s) to crash)
 		// App Restart command to drop the maxed port every second during the attack
 		// Quick app/server restart applications can keep users connected to it during attacks. 
 		// Make sure clients application have re-connect upon disconnections. Most have it by default
-		command 	string 
+		command 		string 
+		max_con 		int
+		max_pps 		int
+		enable_filter	bool
+		enable_drop		bool
 }
 
 pub struct Protection 
@@ -78,7 +82,6 @@ pub const protection_filepath = "assets/settings.shield"
 pub fn protection__init() Protection 
 {
 	mut p := Protection{ 
-		server_hostname: os.execute("hostname -f").output, 
 		services: []Service{},
 		temporary_whitelist: []string{}
 	}
@@ -123,11 +126,11 @@ pub fn protection__init() Protection
 			p.whitelisted_ips << ip.trim_space()
 		}
 	}
-
+	
 	/* Retrieve Service Protection via Config */
 	for line in utils.get_block_data(protection_file, "[@PROTECTED_SERVICES]") {
 		if line.trim_space() != "" { 
-			line_arg := line.trim_space().split(":")
+			line_arg := line.trim_space().split(";")
 
 			p.services << Service{
 				name: line_arg[0],
@@ -174,28 +177,23 @@ pub fn (mut p Protection) temporary_whitlist_cons(mut cons []ns.NetstatCon)
 	}
 }
 
-pub fn (mut p Protection) reset_temp_whitlist() 
-{ p.temporary_whitelist = []string{} }
-
-pub fn (mut p Protection) is_port_whitlisted(port int) bool
-{ 
-	if port in p.whitelisted_ports { 
-		return true 
-	}
-	
-	return false
+/*
+*	[@DOC]
+*	pub fn (mut p Protection) reset_temp_whitlist()
+*
+*	- Reset the list of temporary whitelisted IPs for attack mode
+*/
+pub fn (mut p Protection) reset_temp_whitlist()  { 
+	p.temporary_whitelist = []string{} 
 }
 
-pub fn (mut p Protection) is_port_serviced(port int) bool {
-	for service in p.services {
-		if port == service.port { return true }
-	}
-
-	return false
-}
-
-pub fn (mut p Protection) is_con_whitlisted(ip string) bool
-{
+/*
+*	[@DOC]
+*	pub fn (mut p Protection) is_con_whitlisted(ip string) bool
+*
+*	- Check if an IP is whitelisted
+*/
+pub fn (mut p Protection) is_con_whitlisted(ip string) bool {
 	if ip in p.whitelisted_ips {
 		return true
 	}
@@ -207,8 +205,41 @@ pub fn (mut p Protection) is_con_whitlisted(ip string) bool
 	return false 
 }
 
-pub fn (mut p Protection) detect_stage_one(pps int, unique_con_count int) bool 
-{
+/*
+* 	[@DOC]
+*	pub fn (mut p Protection) is_port_whitlisted(port int) bool
+*
+*	- Check if a port is whitelisteds
+*/
+pub fn (mut p Protection) is_port_whitlisted(port int) bool { 
+	if port in p.whitelisted_ports { 
+		return true 
+	}
+	
+	return false
+}
+
+/*
+*	[@DOC]
+*	pub fn (mut p Protection) is_port_serviced(port int) bool
+*
+*	- Check if a port is being serviced
+*/
+pub fn (mut p Protection) is_port_serviced(port int) bool {
+	for service in p.services {
+		if port == service.port { return true }
+	}
+
+	return false
+}
+
+/*
+*	[@DOC]
+*	pub fn (mut p Protection) detect_stage_one(pps int, unique_con_count int) bool 
+*
+*	= Detecting 
+*/
+pub fn (mut p Protection) detect_stage_one(pps int, unique_con_count int) bool {
 	if unique_con_count > p.max_connections || pps >= p.max_pps { 
 		return true
 	}
@@ -217,9 +248,6 @@ pub fn (mut p Protection) detect_stage_one(pps int, unique_con_count int) bool
 }
 
 pub fn (mut p Protection) is_stage_one_done(pps int, unique_con_count int) bool 
-{ return (unique_con_count < p.max_connections && pps < p.max_pps) }
-
-pub fn (mut p Protection) is_stage_two_n_three_done(pps int) bool 
 { return (pps < p.max_pps) }
 
 pub fn (mut p Protection) detect_stage_two(pps int, con_count int, unique_con_count int, blocked_con_count int) bool
@@ -239,3 +267,6 @@ pub fn (mut p Protection) detect_stage_three(pps int) bool
 
 	return false
 }
+
+pub fn (mut p Protection) is_stage_two_n_three_done(pps int) bool 
+{ return (pps < p.max_pps) }

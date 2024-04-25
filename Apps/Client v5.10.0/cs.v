@@ -54,7 +54,7 @@ fn main()
 	if args.len < 2 {
 		println(src.invalid_arguments)
 		exit(0)
-	} else if args[0] in ['--h', '--help'] {
+	} else if args[1] in ['--h', '--help'] {
 		println(start_cmd_list)
 		exit(0)
 	}
@@ -99,7 +99,7 @@ pub fn handle_startup_cmd(mut c shield.CyberShield, args []string)
 				c.servers.ssh_pw = get_flag_value(args, "-pw")
 			}
 			"-interval" {
-				c.interval = get_flag_value(args, "-interval")
+				c.interval = get_flag_value(args, "-interval").int()
 			} else {}
 		}
 	}

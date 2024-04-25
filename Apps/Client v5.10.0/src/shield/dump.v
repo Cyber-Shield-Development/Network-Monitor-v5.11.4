@@ -16,9 +16,10 @@ pub struct Dump
 
 		current_pps 		int
 		max_pps_reached		int
-		max_mbytes_reached 	int
-		max_mbits_reached	int
+		max_mbytes_reached 	f64
+		max_mbits_reached	f64
 		max_cons_captured 	int
+		max_rps_reached		int
 
 		blocked_ips 		[]string
 		blocked_cons 		[]ns.NetstatCon
@@ -78,6 +79,19 @@ pub fn (mut d Dump) is_ip_blocked(ip string) bool
 
 /*
 *	[@DOC]
+*	pub fn (mut d Dump) update_current_stats(cpps int, cmbitps int, mbyteps int, cons_count int)
+*
+*	- Update the highest reached statistics such as pps, mbitps, mbyteps, con count etc
+*/
+pub fn (mut log Dump) update_current_stats(cpps int, mbitps f64, mbyteps f64, cons_count int) {
+	if cpps > log.max_pps_reached { log.max_pps_reached = cpps }
+	if mbitps > log.max_mbits_reached { log.max_mbits_reached = mbitps }
+	if mbyteps > log.max_mbytes_reached { log.max_mbytes_reached = mbyteps }
+	if cons_count > log.max_cons_captured { log.max_cons_captured = cons_count }
+}
+
+/*
+*	[@DOC]
 *	pub fn (mut d Dump) is_con_dropped(ip string) bool 
 *
 *	- Validate if an IP has been dropped in the drop system
@@ -95,6 +109,7 @@ pub fn (mut d Dump) block_con(mut con ns.NetstatCon, mut p Protection)
 {
 	d.blocked_cons << con 
 	d.blocked_ips << con.external_ip
+	d.max_cons_captured = d.blocked_cons.len
 	
 	/* Block IP */
 	if con.ip_t == ns.IP_T.ipv4 {

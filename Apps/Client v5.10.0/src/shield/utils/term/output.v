@@ -15,7 +15,7 @@ pub fn place_text(mut client net.TcpConn, pos []string, color []string, data str
 	if color != ["0","0","0"] && color.len == 3 { create_output += "\x1b[38;2;${color[0]};${color[1]};${color[2]}m" }
 
 	// Add output data and set color to default 
-	create_output += "${data}${c_default}"
+	create_output += "${create_output}${data}${c_default}"
 
 	client.write_string(create_output) or { 0 }
 	time.sleep(10*time.millisecond)

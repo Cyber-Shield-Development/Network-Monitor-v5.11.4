@@ -114,6 +114,7 @@ pub fn (mut c CyberShield) set_theme(theme_name string)
 {
 	c.config.theme = theme_name
 	c.config.ui = config.retrieve_theme(theme_name)
+	c.change_layout()
 }
 
 pub fn (mut c CyberShield) network_protection_scan() 
@@ -148,7 +149,7 @@ pub fn (mut c CyberShield) network_protection_scan()
 
 	/* Whitelist the system's network */
 	mut sys_hostnames := c.network.interfaces[c.network_interface]
-	c.config.protection.server_hostname = os.execute("hostname -f").output
+	// c.config.protection.server_hostname = os.execute("hostname -f").output
 	c.config.protection.server_ipv4 = sys_hostnames[0] 
 	c.config.protection.server_ipv6 = sys_hostnames[1] 
 	c.config.protection.whitelisted_ips << sys_hostnames[0] 

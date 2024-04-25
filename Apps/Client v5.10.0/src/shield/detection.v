@@ -31,8 +31,8 @@ pub fn (mut c CyberShield) start_detection()
 		go do_bytes(mut c, c.network.mbytes_ps.str().int()) // Render MBYTE/S Graph
 
 		/* Get DDOS Detection Status */
-		chk_stage_one 		:= c.config.protection.detect_stage_one(c.network.pps, c.retrieve_unique_cons().len)
-		chk_stage_two 		:= c.config.protection.detect_stage_two(c.network.pps, c.network.netstat_cons.len, c.retrieve_unique_cons().len, c.current_dump.blocked_cons.len)
+		chk_stage_one 		:= c.config.protection.detect_stage_one(c.network.pps, c.random_cons_count())
+		chk_stage_two 		:= c.config.protection.detect_stage_two(c.network.pps, c.network.netstat_cons.len, c.random_cons_count(), c.current_dump.blocked_cons.len)
 		chk_stage_three 	:= c.config.protection.detect_stage_three(c.network.pps)
 
 		/* Handle DDOS Attack */
@@ -71,6 +71,7 @@ pub fn (mut c CyberShield) start_detection()
 
 		/* Used to temporarily whitisted established connection when an attack is caught on the next loop */
 		c.config.protection.last_cons = c.network.netstat_cons
+		c.current_dump.update_current_stats(c.network.pps, c.network.mbits_ps, c.network.mbytes_ps, c.unique_cons_count())
 		time.sleep(1*time.second)
 	}
 }
@@ -113,6 +114,11 @@ pub fn (mut c CyberShield) restart_attack_filter()
 	c.filter_two_mode = false
 	c.drop_mode = false
 	c.current_dump = Dump{}
+
+	// Turn on monitor port listener after the attack is done
+	if !c.servers.monitor_listener_toggle {
+		c.servers.toggle_monitor_listener()
+	}
 }
 
 /* 
@@ -292,7 +298,7 @@ pub fn (mut c CyberShield) retrieve_tcpdump_req()
 				c.network.tcpdump_req[c.network.tcpdump_req.len-1].pkt_data["${ctime}_DATA"] += "${line.trim_space()}\n"
 				continue
 			}
-				c.network.tcpdump_req[c.network.tcpdump_req.len-1].pkt_data["${ctime}_DATA"] = line.trim_space()
+				c.network.tcpdump_req[c.network.tcpdump_req.len-1].pkt_data["${ctime}_DATA"] = "${line.trim_space()}\n"
 		}
 	}
 }
@@ -315,6 +321,63 @@ pub fn (mut c CyberShield) retrieve_unique_cons() []ns.NetstatCon
 	return cons
 }
 
+/*
+*	[@DOC]
+*	pub fn (mut c CyberShield) unique_con_count() int
+*
+*	- A list of cons w/ dups removed (TOTAL CONNECTIONS CONNECTED)
+*/
+pub fn (mut c CyberShield) unique_cons_count() int {
+	mut ips := []string{}
+
+	for mut con in c.network.netstat_cons {
+		if con.external_ip in ips { continue }
+		ips << con.external_ip 
+	}
+
+	return ips.len
+}
+
+/*
+*	[@DOC]
+*	pub fn (mut c CyberShield) random_con_count() int
+*
+*	- A list of cons w/ dups & whitelisted cons removed (TOTAL RANDOM CONNECTIONS CONNECTED)
+*/
+pub fn (mut c CyberShield) random_cons_count() int {
+	mut ips := []string{}
+
+	for mut con in c.network.netstat_cons {
+		if con.external_ip in ips || c.config.protection.is_con_whitlisted(con.external_ip) { continue }
+		ips << con.external_ip
+	}
+
+	return ips.len
+}
+
+/*
+*	[@DOC]
+*	pub fn (mut c CyberShield) random_con_count() int
+*
+*	- A list of cons w/ dups & random cons removed (TOTAL WHITELISTED CONNECTIONS CONNECTED)
+*/
+pub fn (mut c CyberShield) whitelisted_cons_count() int {
+	mut ips := []string{}
+
+	for mut con in c.network.netstat_cons {
+		if con.external_ip in ips || !c.config.protection.is_con_whitlisted(con.external_ip) { continue }
+		ips << con.external_ip
+	}
+
+	return ips.len
+}
+
+/*
+*	[@DOC]
+*	pub fn (mut c CyberShield) post_discord_log(data string, dump_filename string)
+*
+*	- Send a discord notification to Webhook API
+*/
 pub fn (mut c CyberShield) post_discord_log(data string, dump_filename string) {
 	/* Send attack data to discord */
 	mut fields := {
@@ -328,8 +391,8 @@ pub fn (mut c CyberShield) post_discord_log(data string, dump_filename string) {
 		"{STAGE_1_MODE}": "${c.filter_one_mode}",
 		"{STAGE_2_MODE}": "${c.filter_two_mode}",
 		"{STAGE_3_MODE}": "${c.drop_mode}",
-		"{BLOCKED_1_IPS}": "${c.current_dump.blocked_cons.len.str()}",
-		"{BLOCKED_2_IPS}": "${c.current_dump.blocked_t2_cons.len.str()}",
+		"{BLOCKED_1_IPS}": "${c.current_dump.blocked_cons.len}",
+		"{BLOCKED_2_IPS}": "${c.current_dump.blocked_t2_cons.len}",
 		"{ABUSED_PORT}": "${c.current_dump.abused_ports.len}",
 		"{START_TIME}": "${c.current_dump.start_time}",
 		"{END_TIME}": "${c.current_dump.end_time}",

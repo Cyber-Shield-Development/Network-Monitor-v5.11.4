@@ -22,7 +22,7 @@ pub fn graph_init__(pack string) Graph
     g.graph_data_rows = grab_graph_data(pack).reverse()
 
     for _ in 0..g.graph_heigth { g.graph_data << ' ' }
-    println("Graph initialized ${g.graph_heigth},${g.graph_width}....")
+    println("[ + ] Graph initialized ${g.graph_heigth},${g.graph_width}....")
 	return g
 }
 

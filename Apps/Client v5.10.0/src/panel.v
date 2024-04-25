@@ -25,6 +25,18 @@ pub fn local_cmd_handler(mut c shield.CyberShield)
 			}
 
 			match cmd {
+				"interface" {
+					if args.len != 2 { continue }
+					c.network_interface = args[1]
+				}
+				"max_pps" {
+					if args.len != 2 { continue }
+					c.config.protection.max_pps = args[1].int()
+				}
+				"max_cons" {
+					if args.len != 2 { continue }
+					c.config.protection.max_connections = args[1].int()
+				} 
 				"theme" {
 					if args.len != 2 { continue }
 					c.set_theme(args[1])
@@ -39,11 +51,11 @@ pub fn local_cmd_handler(mut c shield.CyberShield)
 				"show_protection" {
 					println("${c.config.protection}")
 				}
-				"start" {
+				"restart" {
 					// c.servers = shield.start_servers(c.cnc_port, c.owner_cnc_port, c.ssh_port)
-					go shield.monitor_listener(mut &c)
-					go shield.owner_monitor_listener(mut &c)
-					println("[ + ] Monitor listeners started....!")
+					c.servers.toggle_monitor_listener() // Turn off
+					c.servers.toggle_monitor_listener() // Turn on
+					println("[ + ] Cyber Shield monitor has been restarted.....!")
 				}
 				"restart_dump" {
 					c.restart_attack_filter()
@@ -57,26 +69,6 @@ pub fn local_cmd_handler(mut c shield.CyberShield)
 				}
 				"clear", "cls", "c" {
 					println("${term.clear}")
-				}
-				"interface" {
-					if args.len != 2 { continue }
-					c.network_interface = args[1]
-				}
-				"max_pps" {
-					if args.len != 2 { continue }
-					c.config.protection.max_pps = args[1].int()
-				}
-				"max_cons" {
-					if args.len != 2 { continue }
-					c.config.protection.max_connections = args[1].int()
-				}
-				"settings" {
-					// c.output_settings()
-					break
-				}
-				"stats" {
-					// c.output_stats()
-					break
 				} else { println(invalid_arguments) } 
 			}
 		}

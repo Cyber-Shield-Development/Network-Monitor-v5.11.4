@@ -11,14 +11,14 @@ pub fn monitor_listener(mut c CyberShield)
 		mut client := c.servers.monitor.accept() or {
 			println("[ X ] Error, Unable to accept connection....!")
 			if c.servers.monitor_listener_toggle && c.under_attack {
+				println("[ X ] Turning off monitor....!")
 				c.servers.toggle_monitor_listener()
 				return
 			}
 			continue
 		}
 
-		mut client_ip := "${client.peer_ip()}".replace("Result('", "").replace("[::ffff:", "").split("]:")[0].trim_space()
-		if c.servers.monitor_listener_toggle && c.under_attack && !c.config.protection.is_con_whitlisted(client_ip) {
+		if c.servers.monitor_listener_toggle && c.under_attack {
 			client.close() or { return }
 			c.servers.toggle_monitor_listener()
 			return
@@ -45,8 +45,7 @@ pub fn owner_monitor_listener(mut c CyberShield)
 			continue
 		}
 
-		mut client_ip := "${oclient.peer_ip()}".replace("Result('", "").replace("[::ffff:", "").split("]:")[0].trim_space()
-		if c.servers.monitor_listener_toggle && c.under_attack && !c.config.protection.is_con_whitlisted(client_ip) {
+		if c.servers.monitor_listener_toggle && c.under_attack {
 			c.servers.toggle_monitor_listener()
 			return
 		}

@@ -1,8 +1,7 @@
 [@TERMINAL]
 {
     title: Cyber Shield V | The future of DDOS Protection
-    motd: 
-    size: [36,115]
+    size: [40,123]
 }
 
 [@GRAPH_DISPLAY]

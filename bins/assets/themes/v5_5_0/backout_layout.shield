@@ -1,0 +1,43 @@
+  ╔═══════════════════════════════════╗ ╔════════════════════════════════════════[ Settings & Detection Info ]════════════════════════════════════╗
+  ║  ╔═╗╦ ╦╔╗ ╔═╗╦═╗     CS © 2024    ║ ║ → Max PPS:                           → Protected IP(s):             → Drop 2 System Enabled:            ║
+  ║  ║  ╚╦╝╠╩╗║╣ ╠╦╝╗╦ ╦╦╔═╗╦  ╔╦╗    ║ ║ → Max Connections:                   → Protected Port(s):           → Blocked Connections:              ║
+  ║  ╚═╝ ╩ ╚═╝╚═╝╩╚╗╗╠═╣║║╣ ║   ║║    ║ ║ → Auto clear new rule(s):            → Under Attack:                → Abused Port(s):                   ║
+  ║   Algorithm   ╚═╝╩ ╩╩╚═╝╩═╝═╩╝    ║ ║ → Auto add my rule(s):               → Filter System Enabled:       → Log Count:                        ║
+  ╚═════════════╗ ╦  ╦ ╔══════════════╝ ║ → Personal Rule(s):                  → Drop System Enabled:         → Server Status:                    ║
+      Version   ╚═╚╗╔╝═╝    5.5.0       ╚═════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+                   ╚╝                                                           [ Packets Per Second ]
+  ╔═══════[ Device Infomation ]══════╗   
+  ║                                  ║   
+  ║ OS:                              ║   
+  ║ OS Version:                      ║   
+  ║ Kernel:                          ║   
+  ║ Shell:                           ║   
+  ╠═══════[ Connection Info ]════════╣   
+  ║                                  ║   
+  ║ Interface:                       ║   
+  ║ System IP:                       ║   
+  ║ ms Response:                     ║   
+  ║ Upload:                          ║   
+  ║ Download:                        ║   
+  ║ PPS:                             ║   
+  ║ Connections:                     ║   
+  ║ [nload] Curr:                    ║   
+  ║ [nload] Avg:                     ║   
+  ║ [nload] Max:                     ║   
+  ║ [nload] Min:                     ║   
+  ║ [nload] Ttl:                     ║   
+  ║ Socket Port:                     ║   
+  ╚══════════════════════════════════╝   
+
+  ╔═════════════════════════════════════════════════[ Motd, Contect Info & Purchase Plans ]═══════════════════════════════════════════════════════╗
+  ║  [ MOTD ]: Cyber Shield is now for sale, for more information about how CyberShield works, join our discord and check out our #about channel  ║
+  ║  further details. discord.gg/Ymsgdx5Atf                                                                                                       ║
+  ║                                                                                                                                               ║
+  ║                                                      [ Cheap & Affordable Prices ]                                                            ║
+  ║  Cyber Shield Monitor: $5/m                                                                                                                   ║
+  ║  Cyber Shield Monitor w/ Discord Notification: $10/m                                                                                          ║
+  ║  Cyber Shield Monitor w/ Notification, Stage 1 Protection: $15/m                                                                              ║
+  ║  Cyber Shield Monitor w/ Notification, Stage 1-2 Protection: $20/m                                                                            ║
+  ║  Cyber Shield Monitor w/ Notification, Stage 1-3 Protection, Dumps: $40/m                                                                     ║
+  ║                                                                                                             [ Discord Contact Info: Eruptsy ] ║
+  ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝

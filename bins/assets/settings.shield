@@ -6,10 +6,10 @@
     cs_ssh_port: 3024
     api_port: 80
     max_pps: 7500
-    max_connections: 40
+    max_connections: 10
     max_con_per_port: 2
     auto_reset_rules: true
-    auto_add_rules: false
+    auto_add_rules: true
 }
 
 [@PERSONAL_RULES]
@@ -24,13 +24,11 @@
     sudo iptables -A OUTPUT -p udp -j DROP
     sudo iptables -A INPUT -m string --string "P��" --algo bm -j DROP
     sudo iptables -A INPUT -m string --string "P" --algo bm -j DROP
-    
 }
 
 [@PROTECTED_IPS]
 {
-    51.81.23.37
-    51.81.41.205
+
 }
 
 // Add service ports in-use

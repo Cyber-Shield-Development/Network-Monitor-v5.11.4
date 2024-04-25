@@ -67,7 +67,7 @@ pub fn (mut s Server) toggle_monitor_listener() {
 			return
 		}
 		
-		s.owner_server = net.listen_tcp(.ip6, "${s.owner_monitorp}") or {
+		s.owner_server = net.listen_tcp(.ip6, ":${s.owner_monitorp}") or {
 			println("[ X ] Error, Unable to start the owner's private monitor port....!")
 			return
 		}
