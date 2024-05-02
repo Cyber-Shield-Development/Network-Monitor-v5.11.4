@@ -1,0 +1,44 @@
+  
+        _________              ╦  ╦
+       / ======= \   ╔═╗╦ ╦╔╗ ╔═╗╦═╗                            ╔═════════════════════[ Settings & Detection Info ]═════════════════════╗
+      / __________\  ║  ╚╦╝╠╩╗║╣ ╠╦╝╗╦ ╦╦╔═╗╦  ╔╦╗                 → Interface:                         → Server Status:
+     | ___________ | ╚═╝ ╩ ╚═╝╚═╝╩╚╗╗╠═╣║║╣ ║   ║║                 → Max PPS:                           → Under Attack:
+     | | -       | |           ╚╗╔╝═╝╩ ╩╩╚═╝╩═╝═╩╝                 → Max Connections:                   → Filter System Enabled:
+     | |         | |            ╚╝                                 → Max Con Per Port:                  → Drop System Enabled:
+     | |_________| |________________________________________       → Auto clear new rule(s):            → Drop 2 System Enabled:
+     \=____________/     Cyber Shield Network Monitor       )      → Auto add my rule(s):               → Drop System Enabled:
+     /             \                                       /       → Personal Rule(s):                  → Blocked Connections:
+    / ::::::::::::: \   @version: 5.10.3                  /        → Protected IP(s):                   → Abused Port(s):
+   / ::::::::::::::: \  @author: Algorithm               /         → Protected Port(s):                 → Log Count:
+  (___________________) @github: @AdvancedAlgorithm  =D-'         
+                                                                          [ Packets Per Second ]
+  ╔═══[ CPU & Ram Usage ]═══╗     80K ║
+   CPU 1:                             ║
+   [-----------------------]      60K ║
+                                      ║
+                                  30K ║
+                                      ║
+   Ram:                           15K ║
+   [-----------------------]          ║
+                                   5K ║
+                                      ╚═════════════════════════════════════════════════════════════════════════════════════════════════════        
+                                                   [ MBit(s) Per Second ]                                  [ MByte(s) Per Second ]                  
+                             20 MBPS ║                                                   20 MBPS ║
+                                     ║                                                           ║
+                             15 MBPS ║                                                   15 MBPS ║
+                                     ║                                                           ║
+                             10 MBPS ║                                                   10 MBPS ║
+                                     ║                                                           ║
+                              5 MBPS ║                                                    5 MBPS ║
+                                     ║                                                           ║
+                              1 MBPS ║                                                    1 MBPS ║
+                                     ╚══════════════════════════════════════════════════         ╚══════════════════════════════════════════════════
+
+  ╔═════[ Device Infomation ]═══╗   ╠═════[ Connection Info ]═════╣             ╔══════════════════════[ Motd & Contect Info]══════════════════════╗
+   OS:                               ms Response:                                 [ MOTD ]: Cyber Shield is now for sale, for more information      
+   OS Version:                       Upload:                                      about how CyberShield works, join our discord and check out our   
+   Kernel:                           Download:                                    #about channel further details. Join our discord!
+   Shell:                            PPS:                                                                                                           
+   System IP:                        Mbit(s) Per Sec:                             X: @CyberShieldDev                                                
+   OpenVPN:                          Mbyte(s) Per Sec:                            Discord: discord.gg/Jbcrmt4x9G                                    
+   Apache:                           Connections:                                                                 [ Discord Contact Info: Eruptsy ]  

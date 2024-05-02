@@ -1,0 +1,48 @@
+[@SETTINGS]
+{
+    token: 
+    interface: ens3
+    monitor_port: 3023
+    cs_ssh_port: 3024
+    api_port: 80
+    max_pps: 7500
+    max_connections: 40
+    max_con_per_port: 2
+    auto_reset_rules: true
+    auto_add_rules: false
+    discord_webhook_api: https://discord.com/api/webhooks/1232453267032637531/TwnK3Z9fTS3xxnhS9GFa25zl0a0kRzwOBJocs2PtRqtAdllc2D0I0vfLyP5EW8FFSSpc
+}
+
+[@PERSONAL_RULES]
+{
+    sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A INPUT -p tcp --dport 80 -m hashlimit --hashlimit-mode srcip --hashlimit-above 20/min --hashlimit-burst 5 --hashlimit-srcmask 32 --hashlimit-name http-limits -j DROP
+    sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+    iptables -N OPENVPN_TRAFFIC
+    iptables -A OPENVPN_TRAFFIC -p udp --dport 5051 -m limit --limit 100/s --limit-burst 200 -j ACCEPT
+    iptables -A INPUT -p udp --dport 5051 -j OPENVPN_TRAFFIC
+    sudo iptables -A INPUT -p udp -j DROP
+    sudo iptables -A OUTPUT -p udp -j DROP
+    sudo iptables -A INPUT -m string --string "P��" --algo bm -j DROP
+    sudo iptables -A INPUT -m string --string "P" --algo bm -j DROP
+    
+}
+
+[@PROTECTED_IPS]
+{
+    
+}
+
+// Add service ports in-use
+// PORT/SERVICE_NAME/PROTOCOL/RESTART_COMMAND/MAX_CON/MAX_PPS/FILTER/DROP
+//  80 ; APACHE     ;   TCP  ;  RESTART_CMD  ;  3    ;   0   ; true ; true
+//
+// USE 0 AS MAX_CON && MAX_PPS TO DISABLE FILTER/DROP ON THE PORT
+// MAX_CON DOES NOT INCLUDE WHITELISTED CONNECTED CONNECTIONS
+// 3 MAX_CON MEANS 3 RANDOM CONNECTIONS THAT ARENT WHITELISTED CAN ENTER!
+// NOTIFICATION FOR HIGH POTENTIAL RISK WILL BE SEPARATE LOG (DISCORD)
+[@PROTECTED_SERVICES]
+{
+    80;APACHE;TCP;service apache2 restart;0;0;true;true
+    5051;OPENVPN;TCP;service openvpn restart;0;40;true;false
+}

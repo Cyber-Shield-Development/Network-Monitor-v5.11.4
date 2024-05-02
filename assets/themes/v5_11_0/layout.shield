@@ -1,0 +1,33 @@
+  {LIGHTMAGENTA}╔═════[{DEFAULT} {WHITE}Settings & Detection Info {LIGHTMAGENTA}]═════╗ ╔═══[{DEFAULT} {WHITE}CPU & Ram Usage {LIGHTMAGENTA}]═══╗ ╔══════════════════[{DEFAULT} {WHITE}Device & Connection Info {LIGHTMAGENTA}]════════════════════╗{DEFAULT}
+    → {YELLOW}Interface{DEFAULT}:                              CPU 1:                     → {YELLOW}Tick{DEFAULT}:                      → {YELLOW}ms Response{DEFAULT}:        
+    → {YELLOW}Max PPS{DEFAULT}:                               [                       ]   → {YELLOW}OS{DEFAULT}:                        → {YELLOW}Pkt/s Per Sec{DEFAULT}:      
+    → {YELLOW}Max Connections{DEFAULT}:                                                   → {YELLOW}OS Version{DEFAULT}:                → {YELLOW}Mbit(s) Per Sec{DEFAULT}:    
+    → {YELLOW}Max Con Per Port{DEFAULT}:                       Ram:                       → {YELLOW}Kernel{DEFAULT}:                    → {YELLOW}Mbyte(s) Per Sec{DEFAULT}:   
+    → {YELLOW}Auto clear new rule(s){DEFAULT}:                [                       ]   → {YELLOW}Shell{DEFAULT}:                     → {YELLOW}Request/s Per Sec{DEFAULT}:  
+    → {YELLOW}Auto add my rule(s){DEFAULT}:                                               → {YELLOW}IPv4{DEFAULT}:                      → {YELLOW}Connections{DEFAULT}:        
+    → {YELLOW}Personal Rule(s){DEFAULT}:                                                  → {YELLOW}IPv6{DEFAULT}:                      → {YELLOW}Last Attackt Time{DEFAULT}: 
+    → {YELLOW}Protected IP(s){DEFAULT}:                                                   → {YELLOW}OpenVPN{DEFAULT}:                   → {YELLOW}Start Time{DEFAULT}:  
+    → {YELLOW}Protected Port(s){DEFAULT}:                                                 → {YELLOW}Apache{DEFAULT}:                    → {YELLOW}Current Time{DEFAULT}: 
+    → {YELLOW}Server Status{DEFAULT}:                   
+    → {YELLOW}Filter 1 System Enabled{DEFAULT}:                                             [ Packets Per Second ]
+    → {YELLOW}Filter 2 System Enabled{DEFAULT}:             80K ║
+    → {YELLOW}Drop System Enabled{DEFAULT}:                     ║
+    → {YELLOW}Filter 1 Blocked Cons{DEFAULT}:               60K ║
+    → {YELLOW}Filter 2 Blocked Cons{DEFAULT}:                   ║
+    → {YELLOW}Dropped Connections{DEFAULT}:                 30K ║
+    → {YELLOW}Abused Port(s){DEFAULT}:                          ║
+    → {YELLOW}Log Count(s){DEFAULT}:                        15K ║
+  ╔═══════[ Last Attack Info ]════════╗        ║
+    → {YELLOW}PPS{DEFAULT}:          → {YELLOW}MBPS{DEFAULT}:                 5K ║
+    → {YELLOW}RPS{DEFAULT}:          → {YELLOW}Blocked{DEFAULT}:                 ╚════════════════════════════════════════════════════════════════════════════════════════
+                           {LIGHTMAGENTA}[ {WHITE}MBit(s) Per Second {LIGHTMAGENTA}]                                              [ {WHITE}MByte(s) Per Second {LIGHTMAGENTA}]{DEFAULT}
+      20 MBPS ║                                                          20 MBPS ║
+              ║                                                                  ║
+      15 MBPS ║                                                          15 MBPS ║
+              ║                                                                  ║
+      10 MBPS ║                                                          10 MBPS ║
+              ║                                                                  ║
+       5 MBPS ║                                                           5 MBPS ║
+              ║                                                                  ║
+       1 MBPS ║                                                           1 MBPS ║
+              ╚══════════════════════════════════════════════════════            ╚══════════════════════════════════════════════════════

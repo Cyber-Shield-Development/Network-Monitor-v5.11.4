@@ -1,0 +1,33 @@
+  ╔═════[ Settings & Detection Info ]═════╗ ╔═══[ CPU & Ram Usage ]═══╗ ╔══════════════════[ Device & Connection Info ]════════════════════╗
+    → Interface:                              CPU 1:                     → Tick:                      → ms Response:        
+    → Max PPS:                               [-----------------------]   → OS:                        → Pkt/s Per Sec:      
+    → Max Connections:                                                   → OS Version:                → Mbit(s) Per Sec:    
+    → Max Con Per Port:                       Ram:                       → Kernel:                    → Mbyte(s) Per Sec:   
+    → Auto clear new rule(s):                [-----------------------]   → Shell:                     → Request/s Per Sec:  
+    → Auto add my rule(s):                                               → IPv4:                      → Connections:        
+    → Personal Rule(s):                                                  → IPv6:                      → Last Attackt Time: 
+    → Protected IP(s):                                                   → OpenVPN:                   → Start Time:  
+    → Protected Port(s):                                                 → Apache:                    → Current Time: 
+    → Server Status:                   
+    → Filter 1 System Enabled:                                             [ Packets Per Second ]
+    → Filter 2 System Enabled:             80K ║
+    → Drop System Enabled:                     ║
+    → Filter 1 Blocked Cons:               60K ║
+    → Filter 2 Blocked Cons:                   ║
+    → Dropped Connections:                 30K ║
+    → Abused Port(s):                          ║
+    → Log Count(s):                        15K ║
+  ╔═══════[ Last Attack Info ]════════╗        ║
+    → PPS:          → MBPS:                 5K ║
+    → RPS:          → Blocked:                 ╚════════════════════════════════════════════════════════════════════════════════════════
+                           [ MBit(s) Per Second ]                                              [ MByte(s) Per Second ]
+      20 MBPS ║                                                          20 MBPS ║
+              ║                                                                  ║
+      15 MBPS ║                                                          15 MBPS ║
+              ║                                                                  ║
+      10 MBPS ║                                                          10 MBPS ║
+              ║                                                                  ║
+       5 MBPS ║                                                           5 MBPS ║
+              ║                                                                  ║
+       1 MBPS ║                                                           1 MBPS ║
+              ╚══════════════════════════════════════════════════════            ╚══════════════════════════════════════════════════════
