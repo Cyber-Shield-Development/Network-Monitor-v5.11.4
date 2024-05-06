@@ -39,7 +39,7 @@ pub fn fill_bar(hashtags int, bar_length int) string
 
 	for _ in 0..hashtags
 	{
-		bar += "|"
+		bar += "█"
 	}
 
 	for _ in 0..empty_space

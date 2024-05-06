@@ -141,40 +141,37 @@ pub fn (mut d Dump) block_con(mut con ns.NetstatCon, mut svc Service)
 pub fn (mut d Dump) adv_block_con(mut con td.TCPDump, mut svc Service)
 {	
 	/* Block IP */
-	match con.req_direction {
-		.outbound {
-			d.append_pkt_data(con.destination_ip, con.retrieve_data())
-			if !d.is_ip_blocked(con.destination_ip) { 
-				// SERVER IS REPLYING TO THE ATTACK (OUT-GOING DATA)
-				if con.hostname_t == td.Protocol_T.ipv4 {
-					os.execute("sudo iptables -A INPUT -s ${con.destination_ip} -p tcp -j DROP; sudo iptables -A OUTPUT -s ${con.destination_ip} -p tcp -j DROP")
-				} else if con.hostname_t == td.Protocol_T.ipv6 {
-					os.execute("sudo ip6tables -A INPUT -s ${con.destination_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.destination_ip} -j DROP")
-				}
-			}
-			d.blocked_ips << con.destination_ip
-		}
-		.inbound {
-			d.append_pkt_data(con.source_ip, con.retrieve_data())
-			if !d.is_ip_blocked(con.source_ip) { 
-				// INCOMING REQ/ATTACK (IN-COMING DATA)
-				if con.hostname_t == td.Protocol_T.ipv4  {
-					os.execute("sudo iptables -A INPUT -s ${con.source_ip} -j DROP; sudo iptables -A OUTPUT -s ${con.source_ip} -j DROP")
-				} else if con.hostname_t == td.Protocol_T.ipv6 {
-					os.execute("sudo ip6tables -A INPUT -s ${con.source_ip} -j DROP; sudo ip6tables -A OUTPUT -s ${con.source_ip} -j DROP")
-				}
-				d.blocked_ips << con.source_ip
-			}
-		} else {}
+	mut ip := con.source_ip
+	if con.req_direction == .outbound {
+		ip = con.destination_ip
+	}
+
+	d.append_pkt_data(ip, con.retrieve_data())
+	if !d.is_ip_blocked(ip) {
+		if con.hostname_t == .ipv4 
+		{ d.block_ipv4(ip) } 
+		else if con.hostname_t == .ipv6 
+		{ d.block_ipv6(ip) }
 	}
 
 	/* Drop Port If not used for hosting */
+	println(svc)
 	if (svc.enable_drop && svc != Service{}) || (svc == Service{}) {
 		println("Port Dropped: ${svc.port}")
 		os.execute("fuser -k ${con.source_port}/tcp; service ssh restart > /dev/null")
 	}
 
 	d.blocked_t2_cons << con
+}
+
+pub fn (mut d Dump) block_ipv4(ip string) {
+	os.execute("sudo iptables -A INPUT -s ${ip} -j DROP; sudo iptables -A OUTPUT -s ${ip} -j DROP")
+	d.blocked_ips << ip
+}
+
+pub fn (mut d Dump) block_ipv6(ip6 string) {
+	os.execute("sudo iptables -A INPUT -s ${ip6} -j DROP; sudo iptables -A OUTPUT -s ${ip6} -j DROP")
+	d.blocked_ips << ip6
 }
 
 pub fn (mut d Dump) dump_file(current_datetime string, mut c CyberShield)

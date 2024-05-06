@@ -1,0 +1,65 @@
+@CyberShield Dump File 2024/05/06-15:19:29 - 2024/05/06-15:20:33
+[@NETWORK_INFO]
+{
+		Con/s: 122
+		Pkt/s Per Second: 5557
+		Mbit/s Per Second: 0.0
+		Mbyte/s Per Second: 0.0
+}
+
+[@ATTACK_INFO]
+{
+		Most IP/s Captured: 34
+		Highest Pkt/s Per Second Captured: 0
+		Highest Mbit/s Per Second Reached: 0.0
+		Highest Mbyte/s Per Second Reached: 0.0
+		Most Request/s Captured & Blocked [TCPDump]: 0
+		Most Dropped Connection/s [Netstat]: 34
+}
+
+[@FULL_CAPTURED_PKT_DATA]
+{
+}
+
+[@CONS_CAPTURED]
+{
+	[udp:ipv4] close_wait 117.250.3.58:23294 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 146.70.126.243:45526 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 158.178.193.59:10768 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 193.151.143.128:55818 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 24.75.156.114:47149 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 178.236.237.73:49528 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 172.232.124.249:50404 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 174.64.199.79:38950 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 104.198.103.99:13313 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 104.200.135.46:51600 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 34.168.37.140:16384 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 181.115.74.172:60681 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 143.198.217.102:62486 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 184.170.245.148:57252 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 105.214.68.156:38796 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 104.200.152.30:46806 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 174.64.199.82:45098 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 213.230.107.5:58716 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 184.185.2.12:40026 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 104.196.236.45:8193 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 204.8.96.87:58698 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 91.187.52.84:41019 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 38.113.171.88:58235 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 216.154.201.132:45646 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 34.105.69.192:36865 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 171.247.96.151:53730 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 45.73.0.118:58123 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 38.133.200.94:36827 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 65.169.38.73:54358 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 51.161.33.206:50373 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 154.64.217.128:45291 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 185.136.150.252:60240 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 170.81.140.79:52689 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+	[udp:ipv4] close_wait 192.158.15.201:50149 > 15.235.48.92:6375 Recv: 1 | Sent: 0
+
+}
+
+[@REQUEST_PKT_DATA]
+{
+}
