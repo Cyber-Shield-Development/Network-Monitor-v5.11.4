@@ -108,7 +108,7 @@ pub fn get_interfaces() map[string][]string
 /* Get Response Time In MS from Ping command */
 pub fn (mut n Network) get_ping_ms()
 {
-	ping_results := os.execute("ping 1.1.1.1 -c 1").output.split("\n")
+	ping_results := os.execute("ping 8.8.8.8 -c 1").output.split("\n")
 
 	if ping_results.len > 0 {
 		n.ms = ping_results[1].split(" ")[(ping_results[1].split(" ").len-2)].replace("time=", "")
@@ -126,30 +126,6 @@ pub fn get_connection_speed(mut n Network)
 			n.download = line.trim_space().replace("Download:", "").trim_space()
 		} else if line.trim_space().starts_with("Upload:") {
 			n.upload = line.trim_space().replace("Upload:", "").trim_space()
-		}
-	}
-}
-
-/* Get nload information */
-pub fn get_nload_info(mut n Network) 
-{
-	os.execute("timeout 1 nload ${n.iface} -m -u m > temp/t.txt").output
-	
-	lines := os.read_lines("temp/t.txt") or { [] }
-	for line in lines 
-	{
-
-		if line.contains("Curr:") {
-			n.curr = line.split(" ")[1].trim_space() + " MBit/s"
-		} else if line.contains("Avg:") {
-			n.avg = line.split(" ")[1].trim_space() + " MBit/s"
-		} else if line.contains("Min:") {
-			n.min = line.split(" ")[1].trim_space() + " MBit/s"
-		} else if line.contains("Max:") {
-			n.max = line.split(" ")[1].trim_space() + " MBit/s"
-		} else if line.contains("Ttl:") {
-			n.ttl = line.split(" ")[1].trim_space() + " MBit/s"
-			break
 		}
 	}
 }

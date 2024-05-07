@@ -1,5 +1,10 @@
 import os
 
+pub struct Obf {
+	pub mut:
+		
+}
+
 fn main()
 {
 	data := os.read_file("cs.v") or {
@@ -17,7 +22,7 @@ fn parse_file(data string)
 	for line in lines {
 		trimmed := line.trim_space()
 		line_info := split(" ")
-		if trimmed.contains("fn") {
+		if trimmed.contains("fn") || trimmed.starts_with("pub fn") {
 			if trimmed.starts_with("fn") {
 				println("Private Function Found: ${line_info[1]}")
 			} else {

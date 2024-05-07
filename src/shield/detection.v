@@ -255,8 +255,8 @@ pub fn (mut c CyberShield) toggle_drop()
 
 pub fn (mut c CyberShield) retrieve_tcpdump_req()
 {
-	go os.execute("timeout 1.2 tcpdump -i ens3 -x -n ip > ipv4_dump.shield")
-	os.execute("timeout 1.2 tcpdump -i ens3 -x -n ip6 > ipv6_dump.shield")
+	go os.execute("timeout 1.2 tcpdump -i ${c.network_interface} -x -n ip > ipv4_dump.shield")
+	os.execute("timeout 1.2 tcpdump -i ${c.network_interface} -x -n ip6 > ipv6_dump.shield")
 
 	ipv4_dump := os.read_lines("ipv4_dump.shield") or { [] }
 	ipv6_dump := os.read_lines("ipv6_dump.shield") or { [] }
